@@ -1,11 +1,12 @@
 package data;
 
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.StringTokenizer;
+import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.date.DateUtil;
 
-public class TTT {
+import java.text.SimpleDateFormat;
+import java.util.*;
+
+public class Utils {
     public static void main(String[] args) {
         for (int i = 0; i < 61; i++) {
             String s = "07:";
@@ -18,20 +19,35 @@ public class TTT {
             System.out.println(ss + "   " + getCompleteTime(ss));
         }
         System.out.println(Math.floor(5.5));
+
+        Map<String, Object> row1 = new LinkedHashMap<>();
+        row1.put("姓名", "张三");
+        row1.put("年龄", 23);
+        row1.put("成绩", 88.32);
+        row1.put("是否合格", true);
+        row1.put("考试日期", DateUtil.date());
+
+        Map<String, Object> row2 = new LinkedHashMap<>();
+        row2.put("姓名", "李四");
+        row2.put("年龄", 33);
+        row2.put("成绩", 59.50);
+        row2.put("是否合格", false);
+        row2.put("考试日期", DateUtil.date());
+
+        ArrayList<Map<String, Object>> rows = CollUtil.newArrayList(row1, row2);
     }
 
 
+    /*时间取值*/
     public static String getCompleteTime(String time) {
-        String hour = "00";//小时
-        String minutes = "00";//分钟
         String outTime = "00:00";
         StringTokenizer st = new StringTokenizer(time, ":");
         List<String> inTime = new ArrayList<String>();
         while (st.hasMoreElements()) {
             inTime.add(st.nextToken());
         }
-        hour = inTime.get(0).toString();
-        minutes = inTime.get(1).toString();
+        String hour = inTime.get(0).toString();
+        String minutes = inTime.get(1).toString();
         if (Integer.parseInt(minutes) > 35) {
             hour = (Integer.parseInt(hour) + 1) + "";
             outTime = hour + ":00";

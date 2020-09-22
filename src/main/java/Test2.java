@@ -3,7 +3,7 @@ import cn.hutool.core.date.DateUtil;
 import cn.hutool.crypto.SecureUtil;
 import cn.hutool.db.Db;
 import cn.hutool.db.Entity;
-import data.TTT;
+import data.Utils;
 import org.apache.poi.ss.usermodel.*;
 
 import java.io.FileInputStream;
@@ -369,7 +369,7 @@ public class Test2 {
                                             }
                                         } else {
                                             //迟到
-                                            dd1 = TTT.getCompleteTime(d1);
+                                            dd1 = Utils.getCompleteTime(d1);
                                             try {
                                                 Db.use().update(
                                                         Entity.create().set("d1", dd1), //修改的数据

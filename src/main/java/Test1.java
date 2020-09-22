@@ -95,7 +95,7 @@ public class Test1 {
             }
 
             Db.use().insert(
-                    Entity.create(Fs.DB_NAME)
+                    Entity.create("oatime")
                             .set("id", SecureUtil.md5(name + YEAR + day))
                             .set("name", name)
                             .set("day", YEAR + day)
