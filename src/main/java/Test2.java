@@ -83,6 +83,7 @@ public class Test2 {
             float f2 = 0F;
             float f3 = 0F;
             List<String> array = new ArrayList<>();
+            if (name == null) continue;
             if (name.length() == 0) continue;
             List<Entity> listEntity = Db.use().findAll(Entity.create(DATABASE_NAME_2).set("name", name));
             for (Entity e : listEntity) {
@@ -127,27 +128,35 @@ public class Test2 {
                     dayF = dayF + ff;
                     dayNumber++;
                 } else {//不满一天则换算为加班时间
-                    float saf = Float.parseFloat(new DecimalFormat(".0").format((float) ((f1 + f2) / 1.2)));
-                    saf = (float) Math.floor(saf);
+//                    float saf = Float.parseFloat(new DecimalFormat(".0").format((float) ((f1 + f2) / 1.2)));
+//                    saf = (float) Math.floor(saf);
 
-                    dayF = dayF + saf + f3;
+                    dayF = dayF + f1 + f2 + f3;
                 }
                 if (f1 > 0 || f2 > 0 || f3 > 0) {
                     dayChuq++;
                 }
             }
             map.put(name, array);
-            map1.put(name, Test1.YEAR + " " + name + " " + dayChuq + " " + dayNumber + " " + dayF);
+            map1.put(name, Test1.YEAR + " " + (name.length() < 3 ? name + "     " : name + "  ") + "       " + dayChuq + "     " + dayNumber + "       " + dayF);
 //            System.out.println(name + " 出勤天数 " + dayChuq + " 计算时间 " + dayNumber + " 加班时间 " + dayF);
 //            System.out.format("%-15s %-15s %-10d %-10d %-10.1f\n", Test1.YEAR, name, dayChuq, dayNumber, dayF);
         }
         System.out.println(map);
         for (String name : arrayList) {
+
             String va = map1.get(name);
-            System.out.println(va);
+            if (va != null) {
+                System.out.println(va);
+            }
+
             List<String> arrayL = map.get(name);
-            for (String s : arrayL) {
-                System.out.println(s);
+            if (arrayL == null) {
+
+            } else {
+                for (String s : arrayL) {
+                    System.out.println(s);
+                }
             }
         }
     }
