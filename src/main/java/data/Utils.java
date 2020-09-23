@@ -1,22 +1,47 @@
 package data;
 
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.date.DateUtil;
+import cn.hutool.poi.excel.ExcelUtil;
+import cn.hutool.poi.excel.ExcelWriter;
 
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.StringTokenizer;
+import java.util.*;
 
 public class Utils {
     public static void main(String[] args) {
+        Map<String, Object> row1 = new LinkedHashMap<>();
+        row1.put("姓名", "张三");
+        row1.put("年龄", 23);
+        row1.put("成绩", 88.32);
+        row1.put("是否合格", true);
+        row1.put("考试日期", DateUtil.date());
 
-        float fff = (float) Math.floor(3.4F + 4.5F - 8F);
-        System.out.println(fff);
-        System.out.print("小数部分是：" + 0.9f % 1);
-        if ((0f % 1) >= 0.85f) {
-            System.out.println("sssss");
-        }
+        Map<String, Object> row2 = new LinkedHashMap<>();
+        row2.put("姓名", "李四");
+        row2.put("年龄", 33);
+        row2.put("成绩", 59.50);
+        row2.put("是否合格", false);
+        row2.put("考试日期", DateUtil.date());
+
+        ArrayList<Map<String, Object>> rows = CollUtil.newArrayList(row1, row2);
+        // 通过工具类创建writer
+        ExcelWriter writer = ExcelUtil.getWriter("d:/writeMapTest.xlsx");
+        // 合并单元格后的标题行，使用默认标题样式
+        writer.merge(rows.size() - 1, "一班成绩单");
+        // 一次性写出内容，使用默认样式，强制输出标题
+        writer.write(rows, true);
+        // 关闭writer，释放内存
+        writer.close();
+
+
+//        float fffd = (float) Math.floor(3.4F + 4.5F - 8F);
+//        System.out.println(fffd);
+//        System.out.print("小数部分是：" + 0.9f % 1);
+//        if ((0f % 1) >= 0.85f) {
+//            System.out.println("sssss");
+//        }
 //        for (int i = 0; i < 61; i++) {
 //            String s = "07:";
 //            String ss = "";
@@ -55,8 +80,8 @@ public class Utils {
         long l1 = DateUtil.parse(d1, "yyyyMMddHH:mm").toCalendar().getTimeInMillis();
         long l2 = DateUtil.parse(d2, "yyyyMMddHH:mm").toCalendar().getTimeInMillis();
         float f = (0.0F + l2 - l1) / 1000F / 60F / 60F;
-        System.out.println("timeDifference d1 = " + d1 + " d2 = " + d2 + " " + f);
-        return f;
+//        System.out.println("timeDifference d1 = " + d1 + " d2 = " + d2 + " " + f);
+        return Float.parseFloat(new DecimalFormat(".00").format(f));
     }
 
     /*时间取值*/

@@ -3,6 +3,7 @@ import cn.hutool.core.date.DateUtil;
 import cn.hutool.crypto.SecureUtil;
 import cn.hutool.db.Db;
 import cn.hutool.db.Entity;
+import data.DataBean;
 import data.Utils;
 import org.apache.poi.ss.usermodel.*;
 
@@ -71,17 +72,19 @@ public class Test2 {
             }
         }
         Map<String, List<String>> map = new HashMap<>();
+        Map<String, List<DataBean>> mapDataBean = new HashMap<>();
         Map<String, String> map1 = new HashMap<>();
 
         for (String name : arrayList) {
-            int dayChuq = 0;
-            int dayNumber = 0;
-            float dayF = 0F;
+            int checkWorkDay = 0;
+            int attendanceDay = 0;
+            float overtime = 0F;
             float f1 = 0F;
             float f2 = 0F;
             float f3 = 0F;
             float fff = 0F;
             List<String> array = new ArrayList<>();
+            List<DataBean> arrayDataBean = new ArrayList<>();
             if (name == null) continue;
             if (name.length() == 0) continue;
             List<Entity> listEntity = Db.use().findAll(Entity.create(DATABASE_NAME_2).set("name", name));
@@ -114,9 +117,9 @@ public class Test2 {
                     //System.out.println("晚班间隔 " + f3);
                 }
 
-                if (f1 > 3.5) {
-                    f1 = 3.5F;
-                }
+//                if (f1 > 3.5) {
+//                    f1 = 3.5F;
+//                }
                 if (f2 > 4.5 && f2 < 5) {
                     f2 = 4.5F;
                 } else if (f2 > 5) {
@@ -131,11 +134,11 @@ public class Test2 {
                     f3 = (float) Math.floor(f3);
                 }
 
-                float ff = f1 + f2 + f3 - 8F;
+                float ff = f1 + f2 + f3 - 7.9F;
                 if (ff >= 0) {
                     //如果当天时长大于则算考勤及加班
-                    if (f1 + f2 - 8F > 0) {
-                        float dds = f1 + f2 - 8F;
+                    if (f1 + f2 - 7.9F > 0) {
+                        float dds = f1 + f2 - 7.9F;
                         if ((dds % 1) >= 0.85f) {
                             fff = (float) Math.floor(dds) + 1;
 //                        } else if (dds >= 0.4) {
@@ -143,46 +146,55 @@ public class Test2 {
                         } else {
                             fff = (float) Math.floor(dds);
                         }
-                        dayF = dayF + fff + f3;
+                        overtime = overtime + fff + f3;
                     } else {
-                        dayF = dayF + f3 + (f1 + f2 - 8F);
+                        overtime = overtime + f3 + (f1 + f2 - 8F);
                     }
-                    dayNumber++;
+                    attendanceDay++;
                 } else {
                     //不满一天则换算为加班时间
 //                    float saf = Float.parseFloat(new DecimalFormat(".0").format((float) ((f1 + f2) / 1.2)));
 //                    saf = (float) Math.floor(saf);
 
-                    dayF = dayF + f1 + f2 + f3;
+                    overtime = overtime + f1 + f2 + f3;
                 }
                 if (f1 > 0 || f2 > 0 || f3 > 0) {
-                    dayChuq++;
+                    checkWorkDay++;
                 }
+                DataBean dataBean = new DataBean(name, day, d1, d2, d3, d4, d5, d6, f1, f2, f3);
+                arrayDataBean.add(dataBean);
 
                 array.add(day + "       " + f1 + "        " + f2 + "     " + (f1 + f2) + "     " + fff + "     " + f3 + "     " + ((fff + f3) == 0 ? "" : (fff + f3)));
 //                System.out.format("%-15s %-10.1f %-10.1f %-10.1f\n",  day, f1, f2, f3);
             }
+            mapDataBean.put(name, arrayDataBean);
             map.put(name, array);
-            map1.put(name, Test1.YEAR + " " + (name.length() < 3 ? name + "     " : name + "  ") + "       " + dayChuq + "     " + dayNumber + "       " + dayF);
-//            System.out.println(name + " 出勤天数 " + dayChuq + " 计算时间 " + dayNumber + " 加班时间 " + dayF);
-//            System.out.format("%-15s %-15s %-10d %-10d %-10.1f\n", Test1.YEAR, name, dayChuq, dayNumber, dayF);
+            map1.put(name, Test1.YEAR + " " + (name.length() < 3 ? name + "     " : name + "  ") + "       " + checkWorkDay + "     " + attendanceDay + "       " + overtime);
         }
 //        System.out.println(map);
         for (String name : arrayList) {
-
-            String va = map1.get(name);
-            if (va != null) {
-                System.out.println(va);
-            }
-
-            List<String> arrayL = map.get(name);
-            if (arrayL == null) {
-
-            } else {
-                for (String s : arrayL) {
-                    System.out.println(s);
+            List<DataBean> arrayDataBean = mapDataBean.get(name);
+            if (arrayDataBean != null) {
+                for (DataBean dataBean : arrayDataBean) {
+                    if (dataBean != null) {
+                        System.out.println(dataBean.toString());
+                    }
                 }
+
             }
+//            String va = map1.get(name);
+//            if (va != null) {
+//                System.out.println(va);
+//            }
+//
+//            List<String> arrayL = map.get(name);
+//            if (arrayL == null) {
+//
+//            } else {
+//                for (String s : arrayL) {
+//                    System.out.println(s);
+//                }
+//            }
         }
     }
 
