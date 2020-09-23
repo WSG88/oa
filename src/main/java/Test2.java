@@ -57,21 +57,10 @@ public class Test2 {
                 System.out.println(entity);
             }
         }
-        List<String> namesList = getNameList(DATABASE_NAME_2);
-
         Map<String, List<DataBean>> mapListDataBean = new HashMap<>();
-
+        List<String> namesList = getNameList(DATABASE_NAME_2);
         for (String name : namesList) {
-            int checkWorkDay = 0;
-            int attendanceDay = 0;
-            float overtime = 0F;
-            float f1 = 0F;
-            float f2 = 0F;
-            float f3 = 0F;
-            float fff = 0F;
             List<DataBean> arrayDataBean = new ArrayList<>();
-            if (name == null) continue;
-            if (name.length() == 0) continue;
             List<Entity> listEntity = Db.use().findAll(Entity.create(DATABASE_NAME_2).set("name", name));
             for (Entity e : listEntity) {
                 String day = e.getStr("day");
@@ -81,10 +70,9 @@ public class Test2 {
                 String d4 = e.getStr("d4");
                 String d5 = e.getStr("d5");
                 String d6 = e.getStr("d6");
-                f1 = 0.0F;
-                f2 = 0.0F;
-                f3 = 0.0F;
-                fff = 0F;
+                float f1 = 0F;
+                float f2 = 0F;
+                float f3 = 0F;
                 if (!"缺勤".equals(d1) && !"缺勤".equals(d2)) {
                     f1 = Utils.timeDifference(day + d1, day + d2);
                 }
@@ -95,36 +83,6 @@ public class Test2 {
                     f3 = Utils.timeDifference(day + d5, day + d6);
                 }
 
-                //晚上加班时间
-                if (f3 % 1 >= 0.45) {
-                    f3 = (float) Math.floor(f3) + 0.5F;
-                } else {
-                    f3 = (float) Math.floor(f3);
-                }
-
-                float ff = f1 + f2 + f3 - 7.9F;
-                if (ff >= 0) {
-                    //如果当天时长大于则算考勤及加班
-                    if (f1 + f2 - 7.9F > 0) {
-                        float dds = f1 + f2 - 7.9F;
-                        if ((dds % 1) >= 0.85f) {
-                            fff = (float) Math.floor(dds) + 1;
-//                        } else if (dds >= 0.4) {
-//                            fff = (float) Math.floor(dds) + 0.5F;
-                        } else {
-                            fff = (float) Math.floor(dds);
-                        }
-                        overtime = overtime + fff + f3;
-                    } else {
-                        overtime = overtime + f3 + (f1 + f2 - 8F);
-                    }
-                    attendanceDay++;
-                } else {
-                    overtime = overtime + f1 + f2 + f3;
-                }
-                if (f1 > 0 || f2 > 0 || f3 > 0) {
-                    checkWorkDay++;
-                }
                 DataBean dataBean = new DataBean(name, day, d1, d2, d3, d4, d5, d6, f1, f2, f3);
                 arrayDataBean.add(dataBean);
             }

@@ -16,12 +16,6 @@ import java.util.StringTokenizer;
 public class Utils {
     public static void main(String[] args) throws Exception {
 
-//        float fffd = (float) Math.floor(3.4F + 4.5F - 8F);
-//        System.out.println(fffd);
-//        System.out.print("小数部分是：" + 0.9f % 1);
-//        if ((0f % 1) >= 0.85f) {
-//            System.out.println("sssss");
-//        }
 //        for (int i = 0; i < 61; i++) {
 //            String s = "07:";
 //            String ss = "";

@@ -96,12 +96,14 @@ public class DataBean {
         }
     }
 
+    float NIGHT = 7.95F;
+
     public float n() {
-        if (am + pm > 8F && pm > 4.5F) {
+        if (am + pm > NIGHT && pm > 4.5F) {
             return (float) Math.floor(pm - 4.5F) + m(nm);
         } else {
-            if (nm + am + pm - 8F > 0) {
-                return m(nm + am + pm - 8F);
+            if (nm + am + pm - NIGHT > 0) {
+                return m(nm + am + pm - NIGHT);
             } else {
                 return nm + am + pm;
             }
@@ -109,10 +111,10 @@ public class DataBean {
     }
 
     public int c() {
-        if (am + pm > 8F) {
+        if (am + pm > NIGHT) {
             return 1;
         }
-        if (nm + am + pm - 8F > 0) {
+        if (nm + am + pm - NIGHT > 0) {
             return 1;
         }
         return 0;
