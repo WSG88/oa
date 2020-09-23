@@ -154,7 +154,16 @@ public class Test2 {
         while (iterator.hasNext()) {
             String name = (String) iterator.next();
             List<String> nameList = new ArrayList<>();
-            nameList.add(name);
+            nameList.add(name + "  ");
+            List<DataBean> arrayDataBean1 = mapListDataBean.get(name);
+            float n = 0;
+            float c = 0;
+            for (DataBean dataBean : arrayDataBean1) {
+                c += dataBean.c();
+                n += dataBean.n();
+            }
+            nameList.add(c + "天 ");
+            nameList.add(Utils.getDecimals(n) + "小时  ");
             rowsList.add(nameList);
 
             List<String> timeList1 = new ArrayList<>();
@@ -166,6 +175,10 @@ public class Test2 {
             List<String> timeListAm = new ArrayList<>();
             List<String> timeListPm = new ArrayList<>();
             List<String> timeListNm = new ArrayList<>();
+            List<String> timeListA = new ArrayList<>();
+            List<String> timeListP = new ArrayList<>();
+            List<String> timeListN = new ArrayList<>();
+            List<String> timeListC = new ArrayList<>();
 
             for (int i = 0; i < dayList.size(); i++) {
                 String tt = dayList.get(i);
@@ -186,6 +199,11 @@ public class Test2 {
                             timeListAm.add(dataBean.am + "");
                             timeListPm.add(dataBean.pm + "");
                             timeListNm.add(dataBean.nm + "");
+
+                            timeListA.add(dataBean.a() == 0 ? " " : dataBean.a() + "");
+                            timeListP.add(dataBean.p() == 0 ? " " : dataBean.p() + "");
+                            timeListN.add(dataBean.n() == 0 ? " " : dataBean.n() + "");
+                            timeListC.add(dataBean.c() == 0 ? " " : dataBean.c() + "");
                         }
                     }
                 } else {
@@ -198,6 +216,11 @@ public class Test2 {
                     timeListAm.add(" ");
                     timeListPm.add(" ");
                     timeListNm.add(" ");
+
+                    timeListA.add("");
+                    timeListP.add("");
+                    timeListN.add("");
+                    timeListC.add("");
                 }
             }
             rowsList.add(timeList1);
@@ -209,6 +232,10 @@ public class Test2 {
             rowsList.add(timeListAm);
             rowsList.add(timeListPm);
             rowsList.add(timeListNm);
+            rowsList.add(timeListA);
+            rowsList.add(timeListP);
+            rowsList.add(timeListN);
+            rowsList.add(timeListC);
             rowsList.add(blankList);
             rowsList.add(blankList);
         }

@@ -1,5 +1,7 @@
 package data;
 
+import cn.hutool.core.date.DateUtil;
+
 public class DataBean {
 
     public String name;
@@ -50,5 +52,69 @@ public class DataBean {
                 ", isLeaveEarly=" + isLeaveEarly +
                 ", isAbsence=" + isAbsence +
                 '}';
+    }
+
+    public float a() {
+        if (!"缺勤".equals(d1)) {
+            long l1 = DateUtil.parse(day + d1, "yyyyMMddHH:mm").toCalendar().getTimeInMillis();
+            long l2 = DateUtil.parse(day + "08:05", "yyyyMMddHH:mm").toCalendar().getTimeInMillis();
+            float l = (l1 - l2) / 1000 / 60 / 60;
+            if (l > 0) {
+                if (l % 1 <= 0.5F) {
+                    l = (float) Math.floor(l) + 0.5F;
+                } else {
+                    l = (float) Math.floor(l) + 1F;
+                }
+                return l;
+            }
+        }
+        return 0;
+    }
+
+    public float p() {
+        if (!"缺勤".equals(d3)) {
+            long l1 = DateUtil.parse(day + d3, "yyyyMMddHH:mm").toCalendar().getTimeInMillis();
+            long l2 = DateUtil.parse(day + "13:05", "yyyyMMddHH:mm").toCalendar().getTimeInMillis();
+            float l = (l1 - l2) / 1000 / 60 / 60;
+            if (l > 0) {
+                if (l % 1 <= 0.5F) {
+                    l = (float) Math.floor(l) + 0.5F;
+                } else {
+                    l = (float) Math.floor(l) + 1F;
+                }
+                return l;
+            }
+        }
+        return 0;
+    }
+
+    public float m(float nm) {
+        if (nm % 1 >= 0.5F) {
+            return (float) Math.floor(nm) + 0.5F;
+        } else {
+            return (float) Math.floor(nm);
+        }
+    }
+
+    public float n() {
+        if (am + pm > 8F && pm > 4.5F) {
+            return (float) Math.floor(pm - 4.5F) + m(nm);
+        } else {
+            if (nm + am + pm - 8F > 0) {
+                return m(nm + am + pm - 8F);
+            } else {
+                return nm + am + pm;
+            }
+        }
+    }
+
+    public int c() {
+        if (am + pm > 8F) {
+            return 1;
+        }
+        if (nm + am + pm - 8F > 0) {
+            return 1;
+        }
+        return 0;
     }
 }
