@@ -138,7 +138,7 @@ public class Test1 {
         if (row != null) {
             Cell cell = row.getCell(cellNum);
             if (cell != null) {
-                if (cell.getCellType() == CellType.NUMERIC.getCode()) {
+                if (cell.getCellTypeEnum() == CellType.NUMERIC) {
 //                    System.out.println("第" + (rowNum + 1) + "行" + "第" + (cellNum + 1) + "列的值： " + String.valueOf(cell.getNumericCellValue()));
                     return String.valueOf(cell.getNumericCellValue());
                 }
@@ -153,7 +153,7 @@ public class Test1 {
         if (row != null) {
             Cell cell = row.getCell(cellNum);
             if (cell != null) {
-                if (cell.getCellType() == CellType.NUMERIC.getCode()) {
+                if (cell.getCellTypeEnum() == CellType.NUMERIC) {
                     return "";
                 } else {
 //                    System.out.println("第" + (rowNum + 1) + "行" + "第" + (cellNum + 1) + "列的值： " + cell.getStringCellValue());

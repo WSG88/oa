@@ -10,10 +10,7 @@ import org.apache.poi.ss.usermodel.*;
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class Test2 {
     public static String DATABASE_NAME_2 = "oatime";
@@ -60,22 +57,11 @@ public class Test2 {
                 System.out.println(entity);
             }
         }
+        List<String> namesList = getNameList(DATABASE_NAME_2);
 
+        Map<String, List<DataBean>> mapListDataBean = new HashMap<>();
 
-        List<String> arrayList = new ArrayList<>();
-
-        List<Entity> entities = Db.use().findAll(DATABASE_NAME_2);
-        for (Entity entity : entities) {
-            String name = entity.getStr("name");
-            if (!arrayList.contains(name)) {
-                arrayList.add(name);
-            }
-        }
-        Map<String, List<String>> map = new HashMap<>();
-        Map<String, List<DataBean>> mapDataBean = new HashMap<>();
-        Map<String, String> map1 = new HashMap<>();
-
-        for (String name : arrayList) {
+        for (String name : namesList) {
             int checkWorkDay = 0;
             int attendanceDay = 0;
             float overtime = 0F;
@@ -83,7 +69,6 @@ public class Test2 {
             float f2 = 0F;
             float f3 = 0F;
             float fff = 0F;
-            List<String> array = new ArrayList<>();
             List<DataBean> arrayDataBean = new ArrayList<>();
             if (name == null) continue;
             if (name.length() == 0) continue;
@@ -101,33 +86,16 @@ public class Test2 {
                 f3 = 0.0F;
                 fff = 0F;
                 if (!"缺勤".equals(d1) && !"缺勤".equals(d2)) {
-//                    System.out.println("d1 = " + d1 + " d2 = " + d2);
                     f1 = Utils.timeDifference(day + d1, day + d2);
-                    //System.out.println("上午间隔 " + f1);
                 }
                 if (!"缺勤".equals(d3) && !"缺勤".equals(d4)) {
-//                    System.out.println("d3 = " + d3 + " d4 = " + d4);
                     f2 = Utils.timeDifference(day + d3, day + d4);
-                    //System.out.println("下午间隔 " + f2);
                 }
                 if (!"缺勤".equals(d5) && !"缺勤".equals(d6)) {
-                    //18:00开始加班
-//                    System.out.println("d5 = " + d5 + " d6 = " + d6);
                     f3 = Utils.timeDifference(day + d5, day + d6);
-                    //System.out.println("晚班间隔 " + f3);
                 }
 
-//                if (f1 > 3.5) {
-//                    f1 = 3.5F;
-//                }
-                if (f2 > 4.5 && f2 < 5) {
-                    f2 = 4.5F;
-                } else if (f2 > 5) {
-//                    f2 = (float) Math.floor(f2);
-                }
-//                f3 = (float) Math.floor(f3);
-//                System.out.println(f3);
-//                System.out.println(f3 % 1);
+                //晚上加班时间
                 if (f3 % 1 >= 0.45) {
                     f3 = (float) Math.floor(f3) + 0.5F;
                 } else {
@@ -152,10 +120,6 @@ public class Test2 {
                     }
                     attendanceDay++;
                 } else {
-                    //不满一天则换算为加班时间
-//                    float saf = Float.parseFloat(new DecimalFormat(".0").format((float) ((f1 + f2) / 1.2)));
-//                    saf = (float) Math.floor(saf);
-
                     overtime = overtime + f1 + f2 + f3;
                 }
                 if (f1 > 0 || f2 > 0 || f3 > 0) {
@@ -163,53 +127,119 @@ public class Test2 {
                 }
                 DataBean dataBean = new DataBean(name, day, d1, d2, d3, d4, d5, d6, f1, f2, f3);
                 arrayDataBean.add(dataBean);
-
-                array.add(day + "       " + f1 + "        " + f2 + "     " + (f1 + f2) + "     " + fff + "     " + f3 + "     " + ((fff + f3) == 0 ? "" : (fff + f3)));
-//                System.out.format("%-15s %-10.1f %-10.1f %-10.1f\n",  day, f1, f2, f3);
             }
-            mapDataBean.put(name, arrayDataBean);
-            map.put(name, array);
-            map1.put(name, Test1.YEAR + " " + (name.length() < 3 ? name + "     " : name + "  ") + "       " + checkWorkDay + "     " + attendanceDay + "       " + overtime);
+            mapListDataBean.put(name, arrayDataBean);
         }
-//        System.out.println(map);
-        for (String name : arrayList) {
-            List<DataBean> arrayDataBean = mapDataBean.get(name);
-            if (arrayDataBean != null) {
+
+        saveToExcel(mapListDataBean);
+    }
+
+    private static void saveToExcel(Map<String, List<DataBean>> mapListDataBean) {
+        List<List<String>> rowsList = new ArrayList<>();
+        List<String> dayList = new ArrayList<>();
+        List<String> blankList = new ArrayList<>();
+        for (int i = 1; i < 32; i++) {
+            String dd;
+            if (i < 10) {
+                dd = "2020080" + i;
+            } else {
+                dd = "202008" + i;
+            }
+            dayList.add(dd);
+            blankList.add(" ");
+        }
+        rowsList.add(dayList);
+
+        Iterator iterator = mapListDataBean.keySet().iterator();
+        while (iterator.hasNext()) {
+            String name = (String) iterator.next();
+            List<String> nameList = new ArrayList<>();
+            nameList.add(name);
+            rowsList.add(nameList);
+
+            List<String> timeList1 = new ArrayList<>();
+            List<String> timeList2 = new ArrayList<>();
+            List<String> timeList3 = new ArrayList<>();
+            List<String> timeList4 = new ArrayList<>();
+            List<String> timeList5 = new ArrayList<>();
+            List<String> timeList6 = new ArrayList<>();
+            List<String> timeListAm = new ArrayList<>();
+            List<String> timeListPm = new ArrayList<>();
+            List<String> timeListNm = new ArrayList<>();
+
+            for (int i = 0; i < dayList.size(); i++) {
+                String tt = dayList.get(i);
+                List<String> nameDay = new ArrayList<>();
+                List<DataBean> arrayDataBean = mapListDataBean.get(name);
                 for (DataBean dataBean : arrayDataBean) {
-                    if (dataBean != null) {
-                        System.out.println(dataBean.toString());
-                    }
+                    nameDay.add(dataBean.day);
                 }
-
+                if (nameDay.contains(tt)) {
+                    for (DataBean dataBean : arrayDataBean) {
+                        if (tt.equals(dataBean.day)) {
+                            timeList1.add(dataBean.d1);
+                            timeList2.add(dataBean.d2);
+                            timeList3.add(dataBean.d3);
+                            timeList4.add(dataBean.d4);
+                            timeList5.add(dataBean.d5);
+                            timeList6.add(dataBean.d6);
+                            timeListAm.add(dataBean.am + "");
+                            timeListPm.add(dataBean.pm + "");
+                            timeListNm.add(dataBean.nm + "");
+                        }
+                    }
+                } else {
+                    timeList1.add(" ");
+                    timeList2.add(" ");
+                    timeList3.add(" ");
+                    timeList4.add(" ");
+                    timeList5.add(" ");
+                    timeList6.add(" ");
+                    timeListAm.add(" ");
+                    timeListPm.add(" ");
+                    timeListNm.add(" ");
+                }
             }
-//            String va = map1.get(name);
-//            if (va != null) {
-//                System.out.println(va);
-//            }
-//
-//            List<String> arrayL = map.get(name);
-//            if (arrayL == null) {
-//
-//            } else {
-//                for (String s : arrayL) {
-//                    System.out.println(s);
-//                }
-//            }
+            rowsList.add(timeList1);
+            rowsList.add(timeList2);
+            rowsList.add(timeList3);
+            rowsList.add(timeList4);
+            rowsList.add(timeList5);
+            rowsList.add(timeList6);
+            rowsList.add(timeListAm);
+            rowsList.add(timeListPm);
+            rowsList.add(timeListNm);
+            rowsList.add(blankList);
+            rowsList.add(blankList);
         }
+
+
+        Utils.toExcel(rowsList, "2车间", "C:\\Work\\2车间" + new Date().getTime() + ".xlsx");
+    }
+
+    private static List<String> getNameList(String db) throws SQLException {
+        //        List<Entity> entities = Db.use().findAll(db);
+        List<Entity> entities = Db.use().query("select name from " + db + " group by name");
+        List<String> arrayList = new ArrayList<>();
+        for (Entity entity : entities) {
+            String name = entity.getStr("name");
+            if (name != null && name.length() > 0) {
+                arrayList.add(name);
+            }
+        }
+        return arrayList;
     }
 
 
     public static void main1() throws Exception {
-        InputStream fileInputStream = new FileInputStream("D:\\test\\oa\\file\\2.81.xls");
+        InputStream fileInputStream = new FileInputStream("C:\\Work\\oa\\file\\2.81.xls");
         Workbook workbook = WorkbookFactory.create(fileInputStream);
-
         Sheet childSheet = workbook.getSheetAt(0);
         String name;
         List<String> list;
         for (int index = 7; index < childSheet.getLastRowNum() + 1; index = index + 2) {
             //姓名
             name = Test1.readExcelData(childSheet, index - 1, 10);
-//            System.out.println(name);
 
             Row row = childSheet.getRow(index);
             if (row != null) {
@@ -225,11 +255,10 @@ public class Test2 {
                     } else {
                         day = "" + dayday;
                     }
-//                    System.out.println(day);
 
                     list = new ArrayList<>();
                     if (cell != null) {
-                        if (cell.getCellType() == CellType.STRING.getCode()) {
+                        if (cell.getCellTypeEnum() == CellType.STRING) {
                             String string = cell.getStringCellValue();
                             int len = string.length();
                             int lim = len / 5;

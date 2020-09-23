@@ -1,40 +1,20 @@
 package data;
 
-import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.date.DateUtil;
+import cn.hutool.db.Db;
+import cn.hutool.db.Entity;
 import cn.hutool.poi.excel.ExcelUtil;
 import cn.hutool.poi.excel.ExcelWriter;
 
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.StringTokenizer;
 
 public class Utils {
-    public static void main(String[] args) {
-        Map<String, Object> row1 = new LinkedHashMap<>();
-        row1.put("姓名", "张三");
-        row1.put("年龄", 23);
-        row1.put("成绩", 88.32);
-        row1.put("是否合格", true);
-        row1.put("考试日期", DateUtil.date());
-
-        Map<String, Object> row2 = new LinkedHashMap<>();
-        row2.put("姓名", "李四");
-        row2.put("年龄", 33);
-        row2.put("成绩", 59.50);
-        row2.put("是否合格", false);
-        row2.put("考试日期", DateUtil.date());
-
-        ArrayList<Map<String, Object>> rows = CollUtil.newArrayList(row1, row2);
-        // 通过工具类创建writer
-        ExcelWriter writer = ExcelUtil.getWriter("d:/writeMapTest.xlsx");
-        // 合并单元格后的标题行，使用默认标题样式
-        writer.merge(rows.size() - 1, "一班成绩单");
-        // 一次性写出内容，使用默认样式，强制输出标题
-        writer.write(rows, true);
-        // 关闭writer，释放内存
-        writer.close();
-
+    public static void main(String[] args) throws Exception {
 
 //        float fffd = (float) Math.floor(3.4F + 4.5F - 8F);
 //        System.out.println(fffd);
@@ -54,21 +34,28 @@ public class Utils {
 //        }
 //        System.out.println(Math.floor(5.5));
 //
-//        Map<String, Object> row1 = new LinkedHashMap<>();
-//        row1.put("姓名", "张三");
-//        row1.put("年龄", 23);
-//        row1.put("成绩", 88.32);
-//        row1.put("是否合格", true);
-//        row1.put("考试日期", DateUtil.date());
-//
-//        Map<String, Object> row2 = new LinkedHashMap<>();
-//        row2.put("姓名", "李四");
-//        row2.put("年龄", 33);
-//        row2.put("成绩", 59.50);
-//        row2.put("是否合格", false);
-//        row2.put("考试日期", DateUtil.date());
-//
-//        ArrayList<Map<String, Object>> rows = CollUtil.newArrayList(row1, row2);
+    }
+
+    public static void toExcel(List<List<String>> rows, String title, String path) {
+        // 通过工具类创建writer
+        ExcelWriter writer = ExcelUtil.getWriter(path);
+        // 合并单元格后的标题行，使用默认标题样式
+//        writer.merge(rows.size() - 1, title);
+        // 一次性写出内容，使用默认样式，强制输出标题
+        writer.write(rows, true);
+        // 关闭writer，释放内存
+        writer.close();
+    }
+
+    public static void toExcel(ArrayList<Map<String, Object>> rows, String title, String path) {
+        // 通过工具类创建writer
+        ExcelWriter writer = ExcelUtil.getWriter(path);
+        // 合并单元格后的标题行，使用默认标题样式
+//        writer.merge(rows.size() - 1, title);
+        // 一次性写出内容，使用默认样式，强制输出标题
+        writer.write(rows, true);
+        // 关闭writer，释放内存
+        writer.close();
     }
 
     public static float getDecimals(float f) {
