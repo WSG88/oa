@@ -12,24 +12,22 @@ import java.sql.SQLException;
 import java.util.*;
 
 public class Test2 {
-    public static String DATABASE_NAME_2 = "oatime";
-    public static String FILE_PATH = "C:\\Work\\oa\\file\\";
-    public static String YEAR_MONTH = "202008";
-    public static String FILE_NAME = "2.81.xls";
-    public static int ROOM = 2;
-
-    public static List<String> arrayNamesList = new ArrayList<>();
 
     public static void main(String[] args) throws Exception {
+        Utils.YEAR_MONTH = "202008";
+        Utils.FILE_NAME = "2.81.xls";
+        Utils.ROOM = 2;
+        Utils.arrayNamesList.clear();
+
         setData();
-        getData();
+        getData(Utils.arrayNamesList);
     }
 
-    public static void getData() throws Exception {
+    public static void getData(List<String> arrayNamesList) throws Exception {
         LinkedHashMap<String, List<DataBean>> mapListDataBean = new LinkedHashMap<>();
         for (String name : arrayNamesList) {
             List<DataBean> arrayDataBean = new ArrayList<>();
-            List<Entity> listEntity = Db.use().findAll(Entity.create(DATABASE_NAME_2).set("name", name));
+            List<Entity> listEntity = Db.use().findAll(Entity.create(Utils.DATABASE_NAME_2).set("name", name));
             for (Entity e : listEntity) {
                 String day = e.getStr("day");
                 String d1 = e.getStr("d1");
@@ -44,6 +42,9 @@ public class Test2 {
                 DataBean dataBean = new DataBean(name, day, d1, d2, d3, d4, d5, d6, f1, f2, f3);
                 arrayDataBean.add(dataBean);
             }
+            if (arrayDataBean.isEmpty()) {
+                continue;
+            }
             mapListDataBean.put(name, arrayDataBean);
         }
 
@@ -53,7 +54,7 @@ public class Test2 {
     private static void saveToExcel(Map<String, List<DataBean>> mapListDataBean) {
         List<List<String>> rowsList = new ArrayList<>();
 
-        List<String> dayList = Utils.getDaysOfMonth(YEAR_MONTH);
+        List<String> dayList = Utils.getDaysOfMonth(Utils.YEAR_MONTH);
         rowsList.add(dayList);
 
         Iterator iterator = mapListDataBean.keySet().iterator();
@@ -71,6 +72,7 @@ public class Test2 {
             nameList.add(c + "天 ");
             nameList.add(Utils.getDecimals(n) + "时  ");
             rowsList.add(nameList);
+            rowsList.add(dayList);
 
             List<String> timeList1 = new ArrayList<>();
             List<String> timeList2 = new ArrayList<>();
@@ -134,39 +136,30 @@ public class Test2 {
             rowsList.add(timeListN);
         }
 
-        Utils.toExcel(rowsList, ROOM + "车间", FILE_PATH +
-                ROOM + "车间" + "_" + YEAR_MONTH + "_" + new Date().getTime() + ".xlsx");
+        Utils.toExcel(rowsList, Utils.ROOM + "车间", Utils.FILE_PATH +
+                Utils.ROOM + "车间" + "_" + Utils.YEAR_MONTH + "_" + new Date().getTime() + ".xlsx");
     }
 
 
     public static void setData() throws Exception {
-        arrayNamesList.clear();
-        InputStream fileInputStream = new FileInputStream(FILE_PATH + FILE_NAME);
+        InputStream fileInputStream = new FileInputStream(Utils.FILE_PATH + Utils.FILE_NAME);
         Workbook workbook = WorkbookFactory.create(fileInputStream);
         Sheet childSheet = workbook.getSheetAt(0);
         List<String> list;
         for (int index = 7; index < childSheet.getLastRowNum() + 1; index = index + 2) {
             //姓名
-            String name = Test1.readExcelData(childSheet, index - 1, 10);
-            if (name == null || name.length() == 0) {
+            String name = ExcelUtil.readExcelData(childSheet, index - 1, 10);
+            if (name == null || name.length() < 2) {
                 continue;
             }
-            arrayNamesList.add(name);
+            Utils.arrayNamesList.add(name);
             Row row = childSheet.getRow(index);
             if (row != null) {
                 int kk = row.getLastCellNum();
                 for (int i = 0; i < kk; i++) {
                     Cell cell = row.getCell(i);
                     //日期
-                    String day;
-                    int j = i + 1;
-                    if (j < 10) {
-                        day = "0" + j;
-                    } else {
-                        day = "" + j;
-                    }
-                    String date = YEAR_MONTH + day;
-
+                    String date = Utils.YEAR_MONTH + String.format("%02d", i + 1);
                     //考勤记录
                     list = new ArrayList<>();
                     if (cell != null) {
@@ -220,7 +213,7 @@ public class Test2 {
                             Data data = new Data(name, date, list);
 //                            System.out.println(data.toString());
 
-                            saveToDatabase(data, ROOM);
+                            saveToDatabase(data, Utils.ROOM);
 
                         }
 
@@ -234,7 +227,7 @@ public class Test2 {
 
     }
 
-    private static void saveToDatabase(Data data, int room) throws SQLException {
+    public static void saveToDatabase(Data data, int room) {
         String name = data.name;
         String date = data.date;
         List<String> list = data.list;
@@ -276,7 +269,7 @@ public class Test2 {
         try {
             //插入数据
             Db.use().insert(
-                    Entity.create(DATABASE_NAME_2)
+                    Entity.create(Utils.DATABASE_NAME_2)
                             .set("id", id)
                             .set("name", name)
                             .set("day", date)
@@ -291,21 +284,24 @@ public class Test2 {
                             .set("n", f3)
                             .set("room", room));
         } catch (SQLException e) {
-            //修改的数据
-            Db.use().update(
-                    Entity.create().set("d1", d1)
-                            .set("name", name)
-                            .set("day", date)
-                            .set("d2", d2)
-                            .set("d3", d3)
-                            .set("d4", d4)
-                            .set("d5", d5)
-                            .set("d6", d6)
-                            .set("m", f1)
-                            .set("a", f2)
-                            .set("n", f3),
-                    Entity.create(DATABASE_NAME_2).set("id", id)
-            );
+            try {
+                //修改的数据
+                Db.use().update(
+                        Entity.create().set("d1", d1)
+                                .set("name", name)
+                                .set("day", date)
+                                .set("d2", d2)
+                                .set("d3", d3)
+                                .set("d4", d4)
+                                .set("d5", d5)
+                                .set("d6", d6)
+                                .set("m", f1)
+                                .set("a", f2)
+                                .set("n", f3),
+                        Entity.create(Utils.DATABASE_NAME_2).set("id", id)
+                );
+            } catch (SQLException e1) {
+            }
         }
     }
 

@@ -10,6 +10,15 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 public class Utils {
+
+    public static String DATABASE_NAME_2 = "oatime";
+    public static String FILE_PATH = "C:\\Work\\oa\\file\\";
+    public static String YEAR_MONTH = "202008";
+    public static String FILE_NAME = "2.81.xls";
+    public static int ROOM = 2;
+    public static List<String> arrayNamesList = new ArrayList<>();
+
+
     public static void main(String[] args) throws Exception {
 
 //        for (int j = 0; j < 23; j++) {
