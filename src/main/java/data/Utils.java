@@ -1,8 +1,6 @@
 package data;
 
 import cn.hutool.core.date.DateUtil;
-import cn.hutool.db.Db;
-import cn.hutool.db.Entity;
 import cn.hutool.poi.excel.ExcelUtil;
 import cn.hutool.poi.excel.ExcelWriter;
 
@@ -16,18 +14,18 @@ import java.util.StringTokenizer;
 public class Utils {
     public static void main(String[] args) throws Exception {
 
-//        for (int i = 0; i < 61; i++) {
-//            String s = "07:";
-//            String ss = "";
-//            if (i < 10) {
-//                ss = s + "0" + i;
-//            } else {
-//                ss = s + i;
-//            }
-//            System.out.println(ss + "   " + getCompleteTime(ss));
-//        }
-//        System.out.println(Math.floor(5.5));
-//
+        for (int i = 0; i < 61; i++) {
+            String s = "08:";
+            String ss = "";
+            if (i < 10) {
+                ss = s + "0" + i;
+            } else {
+                ss = s + i;
+            }
+            System.out.println(ss + "   " + getCompleteTime(ss));
+        }
+        System.out.println(Math.floor(5.5));
+
     }
 
     public static void toExcel(List<List<String>> rows, String title, String path) {
@@ -65,8 +63,10 @@ public class Utils {
         return Float.parseFloat(new DecimalFormat(".00").format(f));
     }
 
-    /*时间取值*/
+    /*时间取值,允许6分钟，其他为半小时向上取整*/
     public static String getCompleteTime(String time) {
+        int time1 = 6;
+        int time2 = 36;
         String outTime = "00:00";
         StringTokenizer st = new StringTokenizer(time, ":");
         List<String> inTime = new ArrayList<String>();
@@ -75,7 +75,7 @@ public class Utils {
         }
         String hour = inTime.get(0).toString();
         String minutes = inTime.get(1).toString();
-        if (Integer.parseInt(minutes) > 35) {
+        if (Integer.parseInt(minutes) > time2) {
             hour = (Integer.parseInt(hour) + 1) + "";
             outTime = hour + ":00";
             SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
@@ -84,7 +84,7 @@ public class Utils {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-        } else if (Integer.parseInt(minutes) < 6) {
+        } else if (Integer.parseInt(minutes) < time1 + 1) {
             outTime = hour + ":00";
             SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
             try {
@@ -92,7 +92,7 @@ public class Utils {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-        } else if (Integer.parseInt(minutes) <= 35 && Integer.parseInt(minutes) != 0) {
+        } else if (Integer.parseInt(minutes) != 0) {
             outTime = hour + ":30";
             SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
 
