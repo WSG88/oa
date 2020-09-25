@@ -14,17 +14,23 @@ import java.util.StringTokenizer;
 public class Utils {
     public static void main(String[] args) throws Exception {
 
-        for (int i = 0; i < 61; i++) {
-            String s = "08:";
-            String ss = "";
-            if (i < 10) {
-                ss = s + "0" + i;
-            } else {
-                ss = s + i;
+        for (int j = 0; j < 23; j++) {
+            String s = j + ":";
+            if (j < 10) {
+                s = "0" + j + ":";
             }
-            System.out.println(ss + "   " + getCompleteTime(ss));
+            for (int i = 0; i < 61; i++) {
+                String ss = "";
+                if (i < 10) {
+                    ss = s + "0" + i;
+                } else {
+                    ss = s + i;
+                }
+//            System.out.println(ss + "   " + getCompleteTime(ss));
+                System.out.println(ss + "   " + getFirstTime("20200801", ss));
+            }
         }
-        System.out.println(Math.floor(5.5));
+//        System.out.println(Math.floor(5.5));
 
     }
 
@@ -65,8 +71,6 @@ public class Utils {
 
     /*时间取值,允许6分钟，其他为半小时向上取整*/
     public static String getCompleteTime(String time) {
-        int time1 = 6;
-        int time2 = 36;
         String outTime = "00:00";
         StringTokenizer st = new StringTokenizer(time, ":");
         List<String> inTime = new ArrayList<String>();
@@ -75,7 +79,7 @@ public class Utils {
         }
         String hour = inTime.get(0).toString();
         String minutes = inTime.get(1).toString();
-        if (Integer.parseInt(minutes) > time2) {
+        if (Integer.parseInt(minutes) > SIX_T) {
             hour = (Integer.parseInt(hour) + 1) + "";
             outTime = hour + ":00";
             SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
@@ -84,7 +88,7 @@ public class Utils {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-        } else if (Integer.parseInt(minutes) < time1 + 1) {
+        } else if (Integer.parseInt(minutes) < SIX + 1) {
             outTime = hour + ":00";
             SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
             try {
@@ -103,5 +107,22 @@ public class Utils {
             }
         }
         return outTime;
+    }
+
+    public static int SIX = 6;
+    public static int SIX_T = 36;
+    public static String FIRST_TIME = "08:00";
+    public static String FIRST_TIME_PRE = "08:0" + SIX;
+
+    public static String getFirstTime(String day, String time) {
+        String dd = day + time;
+        long l1 = DateUtil.parse(dd, "yyyyMMddHH:mm").toCalendar().getTimeInMillis();
+        long l2 = DateUtil.parse(day + FIRST_TIME_PRE, "yyyyMMddHH:mm").toCalendar().getTimeInMillis();
+
+        if (l1 > l2) {
+            return getCompleteTime(time);
+        } else {
+            return FIRST_TIME;
+        }
     }
 }
