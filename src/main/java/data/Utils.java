@@ -42,6 +42,7 @@ public class Utils {
         if (name == null
                 || "".equals(name)
                 || "正常".equals(name)
+                || "陈卫平".equals(name)
                 || "何仁易".equals(name)
                 || "王扬威".equals(name)
                 || "陈鹏".equals(name)
@@ -369,6 +370,41 @@ public class Utils {
         }
     }
 
+    //检查考勤数据是否完整
+    public static void checkData(Data data, int room) {
+        String name = data.name;
+        String date = data.date;
+        List<String> list = data.list;
+
+        //早上多打卡
+        if (list.size() > 1) {
+            int l = 0;
+            for (String s : list) {
+                if (s.startsWith("07")) {
+                    l++;
+                }
+            }
+            if (l > 1) {
+                System.out.println(name + "   " + date + " " + list);
+                return;
+            }
+        }
+        //打卡次数缺失
+        if (list.size() == 1 || list.size() == 3 || list.size() == 5) {
+            System.out.println(name + "   " + date + " " + list);
+            return;
+        }
+
+        //是否请假
+        if (list.size() == 2) {
+            System.out.println(name + "   " + date + " " + list);
+        } else if (list.size() == 4) {
+            if (!(list.get(0).startsWith("07") || list.get(0).startsWith("08"))) {
+                System.out.println(name + "   " + date + " " + list);
+            }
+        }
+    }
+
     public static void saveToDatabase(Data data, int room) {
         String name = data.name;
         String date = data.date;
@@ -480,6 +516,8 @@ public class Utils {
             nameList.add(name + "  ");
             nameList.add(c + "天 ");
             nameList.add(Utils.getDecimals(n) + "时  ");
+            System.out.println(nameList);
+
             rowsList.add(nameList);
             rowsList.add(dayList);
 

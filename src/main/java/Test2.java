@@ -7,20 +7,130 @@ import java.util.List;
 
 public class Test2 {
 
+
     public static void main(String[] args) throws Exception {
+        testOne();
+        testTwo();
+    }
+
+    public static void testOne() throws Exception {
+
+        Utils.YEAR_MONTH = "202008";
+        Utils.FILE_NAME = "1.8.xls";
+        Utils.ROOM = 1;
+        Utils.clear();
+
+        Workbook wbs = Utils.getWorkbook();
+        for (int i = 0; i < wbs.getNumberOfSheets(); i++) {
+            Sheet childSheet = Utils.getSheet(wbs, null, i);
+            List<Data> dataArrayList = setDataOne(childSheet);
+            for (Data data : dataArrayList) {
+                Utils.saveToDatabase(data, Utils.ROOM);
+            }
+        }
+        Utils.getData(Utils.arrayNamesList);
+    }
+
+    public static List<Data> setDataOne(Sheet childSheet) throws Exception {
+        List<Data> dataArrayList = new ArrayList<>();
+
+        //姓名
+        String name1 = Utils.readExcelData(childSheet, 3, 9);
+        String name2 = Utils.readExcelData(childSheet, 3, 24);
+        String name3 = Utils.readExcelData(childSheet, 3, 39);
+        Utils.add(name1);
+        Utils.add(name2);
+        Utils.add(name3);
+
+        //考勤记录
+        List<String> list11 = new ArrayList<>();
+        List<String> list22 = new ArrayList<>();
+        List<String> list33 = new ArrayList<>();
+
+        for (int row = 12; row < 43; row++) {
+            //日期
+            String day = Utils.readExcelData(childSheet, row, 0);
+            if (!"".equals(day)) {
+                day = day.substring(0, 2);
+            }
+            for (int cell = 0; cell < 44; cell++) {
+                if (cell == 2 - 1
+                        || cell == 4 - 1
+                        || cell == 7 - 1
+                        || cell == 9 - 1
+                        || cell == 11 - 1
+                        || cell == 13 - 1
+                        ) {
+                    list11.add(Utils.readExcelDataGetNumericCellValue(childSheet, row, cell));
+                    getData(dataArrayList, name1, day, list11);
+                }
+                if (cell == 17 - 1
+                        || cell == 19 - 1
+                        || cell == 22 - 1
+                        || cell == 24 - 1
+                        || cell == 26 - 1
+                        || cell == 28 - 1
+                        ) {
+                    list22.add(Utils.readExcelDataGetNumericCellValue(childSheet, row, cell));
+                    getData(dataArrayList, name2, day, list22);
+
+                }
+                if (cell == 32 - 1
+                        || cell == 34 - 1
+                        || cell == 37 - 1
+                        || cell == 39 - 1
+                        || cell == 41 - 1
+                        || cell == 43 - 1
+                        ) {
+                    list33.add(Utils.readExcelDataGetNumericCellValue(childSheet, row, cell));
+                    getData(dataArrayList, name3, day, list33);
+                }
+            }
+        }
+        return dataArrayList;
+    }
+
+    private static void getData(List<Data> dataArrayList, String name, String day, List<String> list) {
+        if (list.size() == 6) {
+            Data data = insertData(list, name, day);
+            if (data != null) {
+                dataArrayList.add(data);
+            }
+            list.clear();
+        }
+    }
+
+    public static Data insertData(List<String> list, String name, String day) {
+        if (!Utils.isAdd(name)) {
+            return null;
+        }
+        String date = Utils.YEAR_MONTH + day;
+        List<String> arrayList = new ArrayList<>();
+        for (String string : list) {
+            arrayList.add(Utils.calculateTime(string));
+        }
+        return new Data(name, date, arrayList);
+    }
+
+    public static void testTwo() throws Exception {
         Utils.YEAR_MONTH = "202008";
         Utils.FILE_NAME = "2.81.xls";
         Utils.ROOM = 2;
         Utils.clear();
 
-        setData();
+        Workbook wbs = Utils.getWorkbook();
+        Sheet childSheet = wbs.getSheetAt(0);
+
+        List<Data> dataArrayList = setDataTwo(childSheet);
+        for (Data data : dataArrayList) {
+            Utils.saveToDatabase(data, Utils.ROOM);
+        }
+
         Utils.getData(Utils.arrayNamesList);
     }
 
-    public static void setData() throws Exception {
-        Workbook wbs = Utils.getWorkbook();
-        Sheet childSheet = wbs.getSheetAt(0);
-        List<String> list;//考勤记录
+    public static List<Data> setDataTwo(Sheet childSheet) throws Exception {
+        List<Data> dataArrayList = new ArrayList<>();
         for (int index = 7; index < childSheet.getLastRowNum() + 1; index = index + 2) {
             //姓名
             String name = Utils.readExcelData(childSheet, index - 1, 10);
@@ -36,68 +146,24 @@ public class Test2 {
                     //日期
                     String date = Utils.YEAR_MONTH + String.format("%02d", i + 1);
                     //考勤记录
-                    list = new ArrayList<>();
-                    if (cell != null) {
-                        if (cell.getCellTypeEnum() == CellType.STRING) {
-                            String string = cell.getStringCellValue();
-                            int len = string.length();
-                            int ll = len / 5;
-                            for (int ii = 0; ii < ll; ii++) {
-                                String sss = string.substring(ii * 5, ii * 5 + 5);
-                                list.add(sss);
-                            }
-                            //检查考勤数据是否完整
-
-//                            //早上多打卡
-//                            if (list.size() > 1) {
-//                                int l = 0;
-//                                for (String s : list) {
-//                                    if (s.startsWith("07")) {
-//                                        l++;
-//                                    }
-//                                }
-//                                if (l > 1) {
-//                                    System.out.println(name + "   " + date + " " + list);
-//                            return;
-//                                }
-//                            }
-//                            //打卡次数缺失
-//                            if (list.size() == 1 || list.size() == 3 || list.size() == 5) {
-//                                System.out.println(name + "   " + date + " " + list);
-//                            return;
-//                            }
-
-//                            //是否请假
-//                            if (list.size() == 2) {
-//                                System.out.println(name + "   " + date + " " + list);
-//                            } else if (list.size() == 4) {
-//                                if (!(list.get(0).startsWith("07") || list.get(0).startsWith("08"))) {
-//                                    System.out.println(name + "   " + date + " " + list);
-//                                }
-//                            }
-
-                            //清空一次打卡
-                            if (list.size() == 1) {
-                                list.clear();
-                                continue;
-                            }
-                            //补全考勤数据
-                            Utils.completeQueQing(list);
-                            //检查各区间值是否正常
-
-                            Utils.saveToDatabase(new Data(name, date, list), Utils.ROOM);
-
+                    List<String> list = new ArrayList<>();
+                    if (cell != null && cell.getCellTypeEnum() == CellType.STRING) {
+                        String string = cell.getStringCellValue();
+                        int len = string.length();
+                        int ll = len / 5;
+                        for (int ii = 0; ii < ll; ii++) {
+                            String sss = string.substring(ii * 5, ii * 5 + 5);
+                            list.add(sss);
                         }
-
                     }
-
+                    if (!list.isEmpty()) {
+                        //补全考勤数据
+                        Utils.completeQueQing(list);
+                        dataArrayList.add(new Data(name, date, list));
+                    }
                 }
             }
-
         }
-
-
+        return dataArrayList;
     }
-
-
 }
