@@ -385,22 +385,22 @@ public class Utils {
                 }
             }
             if (l > 1) {
-                System.out.println(name + "   " + date + " " + list);
+                System.out.println(room + "车间 " + name + "   " + date + " " + list);
                 return;
             }
         }
         //打卡次数缺失
         if (list.size() == 1 || list.size() == 3 || list.size() == 5) {
-            System.out.println(name + "   " + date + " " + list);
+            System.out.println(room + "车间 " + name + "   " + date + " " + list);
             return;
         }
 
         //是否请假
         if (list.size() == 2) {
-            System.out.println(name + "   " + date + " " + list);
+            System.out.println(room + "车间 " + name + "   " + date + " " + list);
         } else if (list.size() == 4) {
             if (!(list.get(0).startsWith("07") || list.get(0).startsWith("08"))) {
-                System.out.println(name + "   " + date + " " + list);
+                System.out.println(room + "车间 " + name + "   " + date + " " + list);
             }
         }
     }
@@ -468,11 +468,12 @@ public class Utils {
     }
 
 
-    public static void getData(List<String> arrayNamesList) throws Exception {
+    public static void getData(List<String> arrayNamesList, String dateTime) throws Exception {
         LinkedHashMap<String, List<DataBean>> mapListDataBean = new LinkedHashMap<>();
         for (String name : arrayNamesList) {
             List<DataBean> arrayDataBean = new ArrayList<>();
-            List<Entity> listEntity = Db.use().findAll(Entity.create(Utils.DATABASE_NAME_2).set("name", name));
+            List<Entity> listEntity = Db.use().findAll(Entity.create(Utils.DATABASE_NAME_2).set("name", name).set("day", "like " + dateTime +
+                    "%"));
             for (Entity e : listEntity) {
                 String day = e.getStr("day");
                 String d1 = e.getStr("d1");
