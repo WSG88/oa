@@ -14,7 +14,6 @@ public class WWW {
         for (int jj = 0; jj < cnt; jj++) {
             Sheet childSheet = wbs.getSheetAt(jj);
 
-            Font font = wbs.getFontAt(row.getCell(k).getCellStyle().getFontIndex());
 
             System.out.println(childSheet.getSheetName());
             for (int index = 1; index < childSheet.getLastRowNum() + 1; index++) {
