@@ -9,14 +9,16 @@ public class Test2 {
 
 
     public static void main(String[] args) throws Exception {
+        Utils.clearList();
         testOne();
         testTwo();
+        Utils.printList();
     }
 
     public static void testOne() throws Exception {
 
-        Utils.YEAR_MONTH = "202008";
-        Utils.FILE_NAME = "1.8.xls";
+        Utils.YEAR_MONTH = "202009";
+        Utils.FILE_NAME = "1.9.xls";
         Utils.ROOM = 1;
         Utils.clear();
 
@@ -28,7 +30,7 @@ public class Test2 {
                 Utils.saveToDatabase(data, Utils.ROOM);
             }
         }
-        Utils.getData(Utils.arrayNamesList);
+        Utils.getData(Utils.arrayNamesList, Utils.YEAR_MONTH);
     }
 
     public static List<Data> setDataOne(Sheet childSheet) throws Exception {
@@ -113,8 +115,8 @@ public class Test2 {
     }
 
     public static void testTwo() throws Exception {
-        Utils.YEAR_MONTH = "202008";
-        Utils.FILE_NAME = "2.81.xls";
+        Utils.YEAR_MONTH = "202009";
+        Utils.FILE_NAME = "2.9.xls";
         Utils.ROOM = 2;
         Utils.clear();
 
@@ -126,7 +128,7 @@ public class Test2 {
             Utils.saveToDatabase(data, Utils.ROOM);
         }
 
-        Utils.getData(Utils.arrayNamesList);
+        Utils.getData(Utils.arrayNamesList, Utils.YEAR_MONTH);
     }
 
     public static List<Data> setDataTwo(Sheet childSheet) throws Exception {

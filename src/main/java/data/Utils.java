@@ -229,7 +229,7 @@ public class Utils {
     public static int SIX_T = 36;
     public static String FIRST_TIME = "08:00";
     public static String FIRST_TIME_PRE = "08:0" + SIX;
-    public static String QUE_QING = "缺勤";
+    public static String QUE_QING = "--";
 
 
     public static String calculateTime(String string) {
@@ -358,7 +358,6 @@ public class Utils {
                 list.add(QUE_QING);
                 list.add(QUE_QING);
                 list.add(QUE_QING);
-                list.add(QUE_QING);
                 break;
             case 4:
                 list.add(QUE_QING);
@@ -370,12 +369,47 @@ public class Utils {
         }
     }
 
+    public static List<List<String>> listList0 = new ArrayList<>();
+    public static List<List<String>> listList1 = new ArrayList<>();
+
+    public static void clearList() {
+        listList0.clear();
+        listList1.clear();
+    }
+
+    public static void printList() {
+        ExcelWriter writer0 = ExcelUtil.getWriter(Utils.FILE_PATH + Utils.YEAR_MONTH + "异常考勤.xls");
+        writer0.write(listList0, true);
+        writer0.close();
+
+        ExcelWriter writer1 = ExcelUtil.getWriter(Utils.FILE_PATH + Utils.YEAR_MONTH + "迟到考勤.xls");
+        writer1.write(listList1, true);
+        writer1.close();
+    }
+
+    //type 0异常1迟到2早退3缺勤
+    public static void setListData(Data data, int room, int type) {
+        List<String> list = new ArrayList<>();
+        list.add(room + "车间 ");
+        list.add(data.date);
+        list.add(data.name);
+        list.addAll(data.list);
+        if (type == 0) {
+            listList0.add(list);
+        } else if (type == 1) {
+            listList1.add(list);
+        }
+    }
+
     //检查考勤数据是否完整
     public static void checkData(Data data, int room) {
-        String name = data.name;
-        String date = data.date;
-        List<String> list = data.list;
-
+        if (data == null) return;
+        List<String> list = new ArrayList<>();
+        for (int i = 0; i < data.list.size(); i++) {
+            if (!"".equals(data.list.get(i)) && !Utils.QUE_QING.equals(data.list.get(i))) {
+                list.add(data.list.get(i));
+            }
+        }
         //早上多打卡
         if (list.size() > 1) {
             int l = 0;
@@ -385,27 +419,39 @@ public class Utils {
                 }
             }
             if (l > 1) {
-                System.out.println(room + "车间 " + name + "   " + date + " " + list);
+                setListData(data, room, 0);
                 return;
             }
         }
         //打卡次数缺失
         if (list.size() == 1 || list.size() == 3 || list.size() == 5) {
-            System.out.println(room + "车间 " + name + "   " + date + " " + list);
+            setListData(data, room, 0);
             return;
         }
 
         //是否请假
         if (list.size() == 2) {
-            System.out.println(room + "车间 " + name + "   " + date + " " + list);
+            setListData(data, room, 0);
         } else if (list.size() == 4) {
             if (!(list.get(0).startsWith("07") || list.get(0).startsWith("08"))) {
-                System.out.println(room + "车间 " + name + "   " + date + " " + list);
+                setListData(data, room, 0);
+            }
+        }
+        //上午迟到
+        if (list.size() > 1) {
+            String dd = data.date + list.get(0);
+            long l1 = DateUtil.parse(dd, "yyyyMMddHH:mm").toCalendar().getTimeInMillis();
+            long l2 = DateUtil.parse(data.date + "08:06", "yyyyMMddHH:mm").toCalendar().getTimeInMillis();
+            if (l1 > l2) {
+                setListData(data, room, 1);
             }
         }
     }
 
     public static void saveToDatabase(Data data, int room) {
+        //
+        Utils.checkData(data, Utils.ROOM);
+
         String name = data.name;
         String date = data.date;
         List<String> list = data.list;
@@ -517,7 +563,7 @@ public class Utils {
             nameList.add(name + "  ");
             nameList.add(c + "天 ");
             nameList.add(Utils.getDecimals(n) + "时  ");
-            System.out.println(nameList);
+            //System.out.println(nameList);
 
             rowsList.add(nameList);
             rowsList.add(dayList);
