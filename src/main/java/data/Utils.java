@@ -55,6 +55,8 @@ public class Utils {
                 || "聂玉光".equals(name)
                 || "陈秋水".equals(name)
                 || "陈卫锋".equals(name)
+                || "程后盛".equals(name)
+                || "张世玉".equals(name)
                 || name.length() < 2) {
             return false;
         }
