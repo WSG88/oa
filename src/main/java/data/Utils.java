@@ -105,24 +105,30 @@ public class Utils {
     }
 
 
-    public static void toExcel(List<List<String>> rows, String title, String path) {
+    public static void toExcel(List<List<String>> rows, String path) {
         // 通过工具类创建writer
         ExcelWriter writer = ExcelUtil.getWriter(path);
         // 合并单元格后的标题行，使用默认标题样式
-//        writer.merge(rows.size() - 1, title);
+        //writer.merge(rows.size() - 1, title);
         // 一次性写出内容，使用默认样式，强制输出标题
         writer.write(rows, true);
-        // 关闭writer，释放内存
-        writer.close();
-    }
 
-    public static void toExcel(ArrayList<Map<String, Object>> rows, String title, String path) {
-        // 通过工具类创建writer
-        ExcelWriter writer = ExcelUtil.getWriter(path);
-        // 合并单元格后的标题行，使用默认标题样式
-//        writer.merge(rows.size() - 1, title);
-        // 一次性写出内容，使用默认样式，强制输出标题
-        writer.write(rows, true);
+        Sheet sheet = writer.getSheet();
+        Font font = sheet.getWorkbook().createFont();
+        font.setFontName("宋体");
+        font.setFontHeight((short) 4);
+        font.setFontHeightInPoints((short) 4);
+        font.setItalic(true);
+        font.setStrikeout(true);
+        CellStyle style = sheet.getWorkbook().createCellStyle();
+        for (int i = 0; i < writer.getRowCount(); i++) {
+            style.setFont(font);
+            sheet.getRow(i).setRowStyle(style);
+        }
+        for (int i = 0; i < 32; i++) {
+            sheet.setColumnWidth(i, 1130);
+        }
+
         // 关闭writer，释放内存
         writer.close();
     }
@@ -140,6 +146,25 @@ public class Utils {
         long l2 = DateUtil.parse(d2, "yyyyMMddHH:mm").toCalendar().getTimeInMillis() / 1000;
         float f = (l2 - l1) / 3600F;
         return Float.parseFloat(new DecimalFormat(".00").format(f));
+    }
+
+    //下班时间取三分钟内补齐整数
+    public static String getCompleteTime1(String time) {
+        String outTime = time;
+        if (time != null && time.contains(":") && time.split(":").length == 2) {
+            String[] ss = time.split(":");
+            int hour = Integer.parseInt(ss[0]);
+            int min = Integer.parseInt(ss[1]);
+            if (min > 26 && min < 30) {
+                outTime = String.format("%02d", hour) + ":30";
+//                System.out.println("time = " + time + " outTime = " + outTime);
+            }
+            if (min > 56 && min < 61) {
+                outTime = String.format("%02d", hour + 1) + ":00";
+//                System.out.println("time = " + time + " outTime = " + outTime);
+            }
+        }
+        return outTime;
     }
 
     /*时间取值,允许6分钟，其他为半小时向上取整*/
@@ -179,6 +204,7 @@ public class Utils {
                 e.printStackTrace();
             }
         }
+//        System.out.println("time = " + time + " outTime = " + outTime);
         return outTime;
     }
 
@@ -222,6 +248,7 @@ public class Utils {
                 e.printStackTrace();
             }
         }
+//        System.out.println("time = " + time + " outTime = " + outTime);
         return outTime;
     }
 
@@ -232,9 +259,11 @@ public class Utils {
     public static String QUE_QING = "--";
 
 
-    public static String calculateTime(String string) {
+    //1车间数据读取格式转换
+    public static String calculateTime(String time) {
+        String outTime = time;
         try {
-            double d0 = Double.parseDouble(string);
+            double d0 = Double.parseDouble(time);
             double dd = d0 * 24;
             int hour = (int) dd;
             double dou = (dd - hour) * 60;
@@ -252,10 +281,11 @@ public class Utils {
                 stringBuilder.append("0");
             }
             stringBuilder.append(minuter);
-            return stringBuilder.toString();
+            outTime = stringBuilder.toString();
         } catch (Exception e) {
-            return string;
         }
+//        System.out.println("time = " + time + " outTime = " + outTime);
+        return outTime;
     }
 
     public static Workbook getWorkbook() throws IOException, InvalidFormatException {
@@ -468,6 +498,8 @@ public class Utils {
         d5 = Utils.getFirstTime(date, d5);
         d6 = Utils.getLastCompleteTime(d6);
 
+        d4 = Utils.getCompleteTime1(d4);
+
         String id = SecureUtil.md5(name + date);
 
         float f1 = Utils.timeDifference(date + d1, date + d2);
@@ -547,7 +579,6 @@ public class Utils {
         List<List<String>> rowsList = new ArrayList<>();
 
         List<String> dayList = Utils.getDaysOfMonth(Utils.YEAR_MONTH);
-        rowsList.add(dayList);
 
         Iterator iterator = mapListDataBean.keySet().iterator();
         while (iterator.hasNext()) {
@@ -560,13 +591,19 @@ public class Utils {
                 c += dataBean.getDay();
                 n += dataBean.getTimes();
             }
-            nameList.add(name + "  ");
-            nameList.add(c + "天 ");
-            nameList.add(Utils.getDecimals(n) + "时  ");
-            //System.out.println(nameList);
-
+            nameList.add("" + name);
+            nameList.add("" + c + "d");
+            nameList.add("" + Utils.getDecimals(n) + "h");
+            //汇总数据
+            System.out.println(nameList);
             rowsList.add(nameList);
-            rowsList.add(dayList);
+
+            //日期数据
+            List<String> dayList1 = new ArrayList<>();
+            for (String s : dayList) {
+                dayList1.add(s.replace(Utils.YEAR_MONTH, ""));
+            }
+            rowsList.add(dayList1);
 
             List<String> timeList1 = new ArrayList<>();
             List<String> timeList2 = new ArrayList<>();
@@ -630,8 +667,7 @@ public class Utils {
             rowsList.add(timeListN);
         }
 
-        Utils.toExcel(rowsList, Utils.ROOM + "车间", Utils.FILE_PATH +
-                Utils.ROOM + "车间" + "_" + Utils.YEAR_MONTH + "_" + new Date().getTime() + ".xlsx");
+        Utils.toExcel(rowsList, Utils.FILE_PATH + Utils.YEAR_MONTH + "_" + Utils.ROOM + "车间.xlsx");
     }
 
 

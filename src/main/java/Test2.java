@@ -133,7 +133,7 @@ public class Test2 {
 
     public static List<Data> setDataTwo(Sheet childSheet) throws Exception {
         List<Data> dataArrayList = new ArrayList<>();
-        for (int index = 7; index < childSheet.getLastRowNum() + 1; index = index + 2) {
+        for (int index = 5; index < childSheet.getLastRowNum() + 1; index = index + 2) {
             //姓名
             String name = Utils.readExcelData(childSheet, index - 1, 10);
             if (!Utils.isAdd(name)) {
