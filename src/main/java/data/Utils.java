@@ -47,14 +47,14 @@ public class Utils {
                 || "王扬威".equals(name)
                 || "陈鹏".equals(name)
                 || "张冬生".equals(name)
-                || "糜火峰".equals(name)
+                || "糜火锋".equals(name)
                 || "周华栋".equals(name)
                 || "汪有国".equals(name)
                 || "洪志超".equals(name)
                 || "程泉华".equals(name)
                 || "聂玉光".equals(name)
                 || "陈秋水".equals(name)
-                || "陈卫峰".equals(name)
+                || "陈卫锋".equals(name)
                 || name.length() < 2) {
             return false;
         }
