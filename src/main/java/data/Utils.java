@@ -6,11 +6,9 @@ import cn.hutool.db.Db;
 import cn.hutool.db.Entity;
 import cn.hutool.poi.excel.ExcelUtil;
 import cn.hutool.poi.excel.ExcelWriter;
-import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.*;
 
 import java.io.FileInputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.sql.SQLException;
 import java.text.DecimalFormat;
@@ -290,9 +288,16 @@ public class Utils {
         return outTime;
     }
 
-    public static Workbook getWorkbook() throws IOException, InvalidFormatException {
-        InputStream in = new FileInputStream(Utils.FILE_PATH + Utils.FILE_NAME);
-        return WorkbookFactory.create(in);
+    public static Workbook getWorkbook() {
+        try {
+//            File f = new File(Utils.FILE_PATH + Utils.FILE_NAME);
+//            POIFSFileSystem in = new POIFSFileSystem(new FileInputStream(f));
+            InputStream in = new FileInputStream(Utils.FILE_PATH + Utils.FILE_NAME);
+            return WorkbookFactory.create(in);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     public static Sheet getSheet(Workbook wbs, String sheetName, int sheetIndex) {
@@ -311,8 +316,11 @@ public class Utils {
             Cell cell = row.getCell(cellNum);
             if (cell != null) {
                 if (cell.getCellTypeEnum() == CellType.NUMERIC) {
-//                    System.out.println("第" + (rowNum + 1) + "行" + "第" + (cellNum + 1) + "列的值： " + String.valueOf(cell.getNumericCellValue()));
-                    return String.valueOf(cell.getNumericCellValue());
+                    String s = String.valueOf(cell.getNumericCellValue());
+                    if (s.length() > 0) {
+//                        System.out.println("第" + (rowNum + 1) + "行" + "第" + (cellNum + 1) + "列的值： " + String.valueOf(cell.getNumericCellValue()));
+                    }
+                    return s;
                 }
             }
         }
@@ -327,8 +335,11 @@ public class Utils {
                 if (cell.getCellTypeEnum() == CellType.NUMERIC) {
                     return "";
                 } else {
-//                    System.out.println("第" + (rowNum + 1) + "行" + "第" + (cellNum + 1) + "列的值： " + cell.getStringCellValue());
-                    return cell.getStringCellValue();
+                    String s = cell.getStringCellValue();
+                    if (s != null && s.length() > 0) {
+//                        System.out.println("第" + (rowNum + 1) + "行" + "第" + (cellNum + 1) + "列的值： " + s);
+                    }
+                    return s;
                 }
             }
         }

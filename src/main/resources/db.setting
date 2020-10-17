@@ -1,8 +1,8 @@
 ## db.setting文件
 
-url = jdbc:mysql://localhost:3306/oa
-user = root
-pass = 123456
+url = jdbc:mysql://192.168.100.208:3306/guns_advanced
+user = sa
+pass = tyhk2020.
 
 ## 可选配置
 # 是否在日志中显示执行的SQL

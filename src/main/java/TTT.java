@@ -1,3 +1,4 @@
+import cn.hutool.core.io.FileUtil;
 import cn.hutool.json.JSONArray;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
@@ -5,10 +6,32 @@ import cn.hutool.json.JSONUtil;
 import java.io.File;
 
 public class TTT {
-    //重命名图片信息
+
     public static void main(String[] args) throws Exception {
+        getObj();
     }
 
+    private static void getObj() {
+        File[] files = FileUtil.ls("D:\\new\\MES_TYHK\\Development");
+        for (int i = 0; i < files.length; i++) {
+            File file = files[i];
+            if (file.isDirectory() && file.listFiles() != null) {
+                File[] filess = file.listFiles();
+                for (int i1 = 0; i1 < filess.length; i1++) {
+                    File ff = filess[i1];
+                    if (ff.isDirectory()) {
+                        String path = ff.getAbsolutePath();
+                        if (path.endsWith("\\obj") || path.endsWith("\\Bin") || path.endsWith("\\bin")) {
+                            System.out.println(path.replace("D:\\new\\MES_TYHK\\Development", "").replace("\\", "/"));
+                        }
+
+                    }
+                }
+            }
+        }
+    }
+
+    //重命名图片信息
     public static void renameTo() throws Exception {
         File file = new File("D:\\ty20200912\\人脸图片文件");
         File[] files = file.listFiles();
