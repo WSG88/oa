@@ -295,6 +295,7 @@ public class Utils {
             InputStream in = new FileInputStream(Utils.FILE_PATH + Utils.FILE_NAME);
             return WorkbookFactory.create(in);
         } catch (Exception e) {
+            System.out.println(Utils.FILE_PATH + Utils.FILE_NAME + "  错误");
             e.printStackTrace();
         }
         return null;
@@ -354,7 +355,7 @@ public class Utils {
                         break;
 
                 }
-                System.out.println("第" + (rowNum + 1) + "行" + "第" + (cellNum + 1) + "列的值： " + s);
+                //System.out.println("第" + (rowNum + 1) + "行" + "第" + (cellNum + 1) + "列的值： " + s);
             }
         }
         return s;
