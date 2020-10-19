@@ -5,7 +5,7 @@ import org.apache.poi.ss.usermodel.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Test2 {
+public class AttendanceCalculation {
 
 
     public static void main(String[] args) throws Exception {

@@ -327,6 +327,39 @@ public class Utils {
         return QUE_QING;
     }
 
+    public static String readExcel(Sheet childSheet, int rowNum, int cellNum) throws Exception {
+        String s = "";
+        Row row = childSheet.getRow(rowNum);
+        if (row != null) {
+            Cell cell = row.getCell(cellNum);
+            if (cell != null) {
+                switch (cell.getCellTypeEnum()) {
+                    case _NONE:
+                        break;
+                    case NUMERIC:
+                        s = String.valueOf(cell.getNumericCellValue());
+                        break;
+                    case STRING:
+                        s = cell.getStringCellValue();
+                        break;
+                    case FORMULA:
+                        s = cell.getCellFormula();
+                        break;
+                    case BLANK:
+                        break;
+                    case BOOLEAN:
+                        s = String.valueOf(cell.getBooleanCellValue());
+                        break;
+                    case ERROR:
+                        break;
+
+                }
+                System.out.println("第" + (rowNum + 1) + "行" + "第" + (cellNum + 1) + "列的值： " + s);
+            }
+        }
+        return s;
+    }
+
     public static String readExcelData(Sheet childSheet, int rowNum, int cellNum) throws Exception {
         Row row = childSheet.getRow(rowNum);
         if (row != null) {

@@ -5,7 +5,7 @@ import cn.hutool.json.JSONUtil;
 
 import java.io.File;
 
-public class TTT {
+public class AccessControlInfo {
 
     public static void main(String[] args) throws Exception {
         getObj();
