@@ -392,17 +392,21 @@ public class Utils {
         return list.size();
     }
 
-    public static String getFirstTime(String day, String time) {
-        if (QUE_QING.equals(time)) {
-            return time;
+    public static String getFirstTime(String day, String time1, String time2, String time3, String time4, Data data) {
+        if (QUE_QING.equals(time1)) {
+            return time1;
         }
-        String dd = day + time;
+        String dd = day + time1;
         long l1 = DateUtil.parse(dd, "yyyyMMddHH:mm").toCalendar().getTimeInMillis();
         long l2 = DateUtil.parse(day + FIRST_TIME_PRE, "yyyyMMddHH:mm").toCalendar().getTimeInMillis();
 
         if (l1 > l2) {
-            return getCompleteTime(time);
+            return getCompleteTime(time1);
         } else {
+            if (QUE_QING.equals(time2) && QUE_QING.equals(time3) && QUE_QING.equals(time4)) {
+                System.out.println(data);
+                return time1;
+            }
             return FIRST_TIME;
         }
     }
@@ -526,9 +530,10 @@ public class Utils {
     }
 
     public static void saveToDatabase(Data data, int room) {
-        //
+        //检查数据
         Utils.checkData(data, Utils.ROOM);
 
+        //补全数据存入数据库
         String name = data.name;
         String date = data.date;
         List<String> list = data.list;
@@ -540,9 +545,9 @@ public class Utils {
         String d5 = list.get(4);
         String d6 = list.get(5);
 
-        d1 = Utils.getFirstTime(date, d1);
-        d3 = Utils.getFirstTime(date, d3);
-        d5 = Utils.getFirstTime(date, d5);
+        d1 = Utils.getFirstTime(date, d1, d2, d3, d4, data);
+        d3 = Utils.getFirstTime(date, d3, d2, d3, d4, data);
+        d5 = Utils.getFirstTime(date, d5, d2, d3, d4, data);
         d6 = Utils.getLastCompleteTime(d6);
 
         d4 = Utils.getCompleteTime1(d4);
@@ -592,6 +597,30 @@ public class Utils {
         }
     }
 
+    //复制元数据
+    public static void copyData(List<String> arrayNamesList, List<Data> dataArrayList) throws Exception {
+        LinkedHashMap<String, List<DataBean>> mapListDataBean = new LinkedHashMap<>();
+        for (String name : arrayNamesList) {
+            List<Data> dataArrayList11 = new ArrayList<>();
+            for (Data data : dataArrayList) {
+                if (name.equals(data.name)) {
+                    dataArrayList11.add(data);
+                }
+            }
+            List<DataBean> arrayDataBean = new ArrayList<>();
+            for (Data data : dataArrayList11) {
+                DataBean dataBean = new DataBean(data.name, data.date, data.list.get(0), data.list.get(1),
+                        data.list.get(2), data.list.get(3), data.list.get(4), data.list.get(5),
+                        0f, 0f, 0f);
+                arrayDataBean.add(dataBean);
+            }
+            if (arrayDataBean.isEmpty()) {
+                continue;
+            }
+            mapListDataBean.put(name, arrayDataBean);
+        }
+        saveToExcel(mapListDataBean, String.valueOf(System.currentTimeMillis()));
+    }
 
     public static void getData(List<String> arrayNamesList, String dateTime) throws Exception {
         LinkedHashMap<String, List<DataBean>> mapListDataBean = new LinkedHashMap<>();
@@ -619,10 +648,10 @@ public class Utils {
             mapListDataBean.put(name, arrayDataBean);
         }
 
-        saveToExcel(mapListDataBean);
+        saveToExcel(mapListDataBean, "");
     }
 
-    private static void saveToExcel(Map<String, List<DataBean>> mapListDataBean) {
+    private static void saveToExcel(Map<String, List<DataBean>> mapListDataBean, String fileName) {
         List<List<String>> rowsList = new ArrayList<>();
 
         List<String> dayList = Utils.getDaysOfMonth(Utils.YEAR_MONTH);
@@ -714,7 +743,8 @@ public class Utils {
             rowsList.add(timeListN);
         }
 
-        Utils.toExcel(rowsList, Utils.FILE_PATH + Utils.YEAR_MONTH + "_" + Utils.ROOM + "车间.xlsx");
+        Utils.toExcel(rowsList, Utils.FILE_PATH + Utils.YEAR_MONTH + "_" + fileName + "_" + Utils.ROOM + "车间.xlsx");
+
     }
 
 

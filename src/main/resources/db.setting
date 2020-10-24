@@ -1,6 +1,6 @@
 ## db.setting文件
 
-url = jdbc:mysql://192.168.100.208:3306/guns_advanced
+url = jdbc:mysql://192.168.100.208:3306/guns_advanced?useUnicode=true&characterEncoding=utf8
 user = sa
 pass = tyhk2020.
 

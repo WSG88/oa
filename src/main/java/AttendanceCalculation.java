@@ -10,7 +10,10 @@ public class AttendanceCalculation {
 
     public static void main(String[] args) throws Exception {
         Utils.clearList();
+        System.out.println("----------------11111111111111111111111111111\n\n");
         testOne();
+        Thread.sleep(5000);
+        System.out.println("----------------22222222222222222222222222222\n\n");
         testTwo();
         Utils.printList();
     }
@@ -21,6 +24,7 @@ public class AttendanceCalculation {
         Utils.FILE_NAME = "1.9.xls";
         Utils.ROOM = 1;
         Utils.clear();
+        List<Data> dataArrayList11 = new ArrayList<>();
 
         Workbook wbs = Utils.getWorkbook();
         for (int i = 0; i < wbs.getNumberOfSheets(); i++) {
@@ -29,7 +33,13 @@ public class AttendanceCalculation {
             for (Data data : dataArrayList) {
                 Utils.saveToDatabase(data, Utils.ROOM);
             }
+            dataArrayList11.addAll(dataArrayList);
         }
+
+        //元数据保存到EXCEL
+        Utils.copyData(Utils.arrayNamesList, dataArrayList11);
+
+        //计算并保存
         Utils.getData(Utils.arrayNamesList, Utils.YEAR_MONTH);
     }
 
