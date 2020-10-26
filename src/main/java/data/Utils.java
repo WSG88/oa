@@ -662,6 +662,9 @@ public class Utils {
                     String dd6 = d6;
 
                     d1 = Utils.getFirstTime(date, d1, d2, d3, d4, data);
+                    if (dd1.startsWith("00")) {
+                        d1 = dd1;
+                    }
                     d3 = Utils.getFirstTime(date, d3, d2, d3, d4, data);
                     d5 = Utils.getFirstTime(date, d5, d2, d3, d4, data);
                     d6 = Utils.getLastCompleteTime(d6);
