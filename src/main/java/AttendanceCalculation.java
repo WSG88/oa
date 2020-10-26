@@ -129,6 +129,7 @@ public class AttendanceCalculation {
         Utils.FILE_NAME = "2.9.xls";
         Utils.ROOM = 2;
         Utils.clear();
+        List<Data> dataArrayList11 = new ArrayList<>();
 
         Workbook wbs = Utils.getWorkbook();
         Sheet childSheet = wbs.getSheetAt(0);
@@ -137,7 +138,12 @@ public class AttendanceCalculation {
         for (Data data : dataArrayList) {
             Utils.saveToDatabase(data, Utils.ROOM);
         }
+        dataArrayList11.addAll(dataArrayList);
 
+        //元数据保存到EXCEL
+        Utils.copyData(Utils.arrayNamesList, dataArrayList11);
+
+        //计算并保存
         Utils.getData(Utils.arrayNamesList, Utils.YEAR_MONTH);
     }
 

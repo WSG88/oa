@@ -404,7 +404,7 @@ public class Utils {
             return getCompleteTime(time1);
         } else {
             if (QUE_QING.equals(time2) && QUE_QING.equals(time3) && QUE_QING.equals(time4)) {
-                System.out.println(data);
+//                System.out.println(data);//夜班数据
                 return time1;
             }
             return FIRST_TIME;
