@@ -29,18 +29,10 @@ public class AttendanceCalculation {
         Workbook wbs = Utils.getWorkbook();
         for (int i = 0; i < wbs.getNumberOfSheets(); i++) {
             Sheet childSheet = Utils.getSheet(wbs, null, i);
-            List<Data> dataArrayList = setDataOne(childSheet);
-            for (Data data : dataArrayList) {
-                Utils.saveToDatabase(data, Utils.ROOM);
-            }
-            dataArrayList11.addAll(dataArrayList);
+            dataArrayList11.addAll(setDataOne(childSheet));
         }
-
-        //元数据保存到EXCEL
-        Utils.copyData(Utils.arrayNamesList, dataArrayList11);
-
         //计算并保存
-        Utils.getData(Utils.arrayNamesList, Utils.YEAR_MONTH);
+        Utils.getData(Utils.arrayNamesList, dataArrayList11);
     }
 
     public static List<Data> setDataOne(Sheet childSheet) throws Exception {
@@ -133,18 +125,9 @@ public class AttendanceCalculation {
 
         Workbook wbs = Utils.getWorkbook();
         Sheet childSheet = wbs.getSheetAt(0);
-
-        List<Data> dataArrayList = setDataTwo(childSheet);
-        for (Data data : dataArrayList) {
-            Utils.saveToDatabase(data, Utils.ROOM);
-        }
-        dataArrayList11.addAll(dataArrayList);
-
-        //元数据保存到EXCEL
-        Utils.copyData(Utils.arrayNamesList, dataArrayList11);
-
+        dataArrayList11.addAll(setDataTwo(childSheet));
         //计算并保存
-        Utils.getData(Utils.arrayNamesList, Utils.YEAR_MONTH);
+        Utils.getData(Utils.arrayNamesList, dataArrayList11);
     }
 
     public static List<Data> setDataTwo(Sheet childSheet) throws Exception {

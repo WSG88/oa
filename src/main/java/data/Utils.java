@@ -210,8 +210,11 @@ public class Utils {
 
     /*时间取值,半小时向下取整*/
     public static String getLastCompleteTime(String time) {
-        if (QUE_QING.equals(time)) {
+        if (QUE_QING.equals(time) || "24:00".equals(time)) {
             return time;
+        }
+        if ("00:00".equals(time)) {
+            return "24:00";
         }
         String outTime = "00:00";
         StringTokenizer st = new StringTokenizer(time, ":");
@@ -619,28 +622,59 @@ public class Utils {
             }
             mapListDataBean.put(name, arrayDataBean);
         }
-        saveToExcel(mapListDataBean, String.valueOf(System.currentTimeMillis()));
+        saveToExcel(mapListDataBean, "元");
     }
 
-    public static void getData(List<String> arrayNamesList, String dateTime) throws Exception {
+    public static void getData(List<String> arrayNamesList, List<Data> dataArrayList) throws Exception {
+        //元数据保存到EXCEL
+        Utils.copyData(Utils.arrayNamesList, dataArrayList);
+
+//        //元数据保存到DB
+//        for (Data data : dataArrayList) {
+//            Utils.saveToDatabase(data, Utils.ROOM);
+//        }
+
+
         LinkedHashMap<String, List<DataBean>> mapListDataBean = new LinkedHashMap<>();
         for (String name : arrayNamesList) {
             List<DataBean> arrayDataBean = new ArrayList<>();
-            List<Entity> listEntity = Db.use().findAll(Entity.create(Utils.DATABASE_NAME_2).set("name", name).set("day", "like " + dateTime +
-                    "%"));
-            for (Entity e : listEntity) {
-                String day = e.getStr("day");
-                String d1 = e.getStr("d1");
-                String d2 = e.getStr("d2");
-                String d3 = e.getStr("d3");
-                String d4 = e.getStr("d4");
-                String d5 = e.getStr("d5");
-                String d6 = e.getStr("d6");
-                float f1 = e.getFloat("m");
-                float f2 = e.getFloat("a");
-                float f3 = e.getFloat("n");
-                DataBean dataBean = new DataBean(name, day, d1, d2, d3, d4, d5, d6, f1, f2, f3);
-                arrayDataBean.add(dataBean);
+            for (Data data : dataArrayList) {
+                if (name.equals(data.name)) {
+                    //检查数据
+                    Utils.checkData(data, Utils.ROOM);
+
+                    //补全数据
+                    String date = data.date;
+                    List<String> list = data.list;
+
+                    String d1 = list.get(0);
+                    String d2 = list.get(1);
+                    String d3 = list.get(2);
+                    String d4 = list.get(3);
+                    String d5 = list.get(4);
+                    String d6 = list.get(5);
+
+                    String dd1 = d1;
+                    String dd2 = d2;
+                    String dd3 = d3;
+                    String dd4 = d4;
+                    String dd5 = d5;
+                    String dd6 = d6;
+
+                    d1 = Utils.getFirstTime(date, d1, d2, d3, d4, data);
+                    d3 = Utils.getFirstTime(date, d3, d2, d3, d4, data);
+                    d5 = Utils.getFirstTime(date, d5, d2, d3, d4, data);
+                    d6 = Utils.getLastCompleteTime(d6);
+
+                    d4 = Utils.getCompleteTime1(d4);
+
+                    float f1 = Utils.timeDifference(date + d1, date + d2);
+                    float f2 = Utils.timeDifference(date + d3, date + d4);
+                    float f3 = Utils.timeDifference(date + d5, date + d6);
+
+                    DataBean dataBean = new DataBean(name, date, dd1, dd2, dd3, dd4, dd5, dd6, f1, f2, f3);
+                    arrayDataBean.add(dataBean);
+                }
             }
             if (arrayDataBean.isEmpty()) {
                 continue;
