@@ -614,7 +614,7 @@ public class Utils {
             for (Data data : dataArrayList11) {
                 DataBean dataBean = new DataBean(data.name, data.date, data.list.get(0), data.list.get(1),
                         data.list.get(2), data.list.get(3), data.list.get(4), data.list.get(5),
-                        0f, 0f, 0f);
+                        0f, 0f, 0f, Utils.ROOM);
                 arrayDataBean.add(dataBean);
             }
             if (arrayDataBean.isEmpty()) {
@@ -625,9 +625,9 @@ public class Utils {
         saveToExcel(mapListDataBean, "元");
     }
 
-    public static void getData(List<String> arrayNamesList, List<Data> dataArrayList) throws Exception {
+    public static void getData(List<String> arrayNamesList, List<Data> dataArrayList, List<Data> dataArrayList11) throws Exception {
         //元数据保存到EXCEL
-        Utils.copyData(Utils.arrayNamesList, dataArrayList);
+        //Utils.copyData(Utils.arrayNamesList, dataArrayList11);
 
 //        //元数据保存到DB
 //        for (Data data : dataArrayList) {
@@ -675,7 +675,7 @@ public class Utils {
                     float f2 = Utils.timeDifference(date + d3, date + d4);
                     float f3 = Utils.timeDifference(date + d5, date + d6);
 
-                    DataBean dataBean = new DataBean(name, date, dd1, dd2, dd3, dd4, dd5, dd6, f1, f2, f3);
+                    DataBean dataBean = new DataBean(name, date, dd1, dd2, dd3, dd4, dd5, dd6, f1, f2, f3, Utils.ROOM);
                     arrayDataBean.add(dataBean);
                 }
             }

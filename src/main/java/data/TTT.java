@@ -19,6 +19,7 @@ public class TTT {
         Workbook wbs = Utils.getWorkbook();
         Sheet childSheet = wbs.getSheetAt(0);
         List<Data> dataArrayList = new ArrayList<>();
+        List<Data> dataArrayList11 = new ArrayList<>();
         for (int rowNumber = 0; rowNumber < childSheet.getLastRowNum() + 1; rowNumber = rowNumber + 13) {
             String name = Utils.readExcel(childSheet, rowNumber, 0);
             if (!Utils.isAdd(name)) {
@@ -36,6 +37,8 @@ public class TTT {
                     String str = Utils.readExcel(childSheet, j, cellNumber);
                     list.add(str);
                 }
+                dataArrayList11.add(new Data(name, date, list));
+
                 List<String> listNew = new ArrayList<>();
                 for (String s : list) {
                     if (StrUtil.isEmpty(s) || Utils.QUE_QING.equals(s)) {
@@ -94,6 +97,6 @@ public class TTT {
             }
         }
         //计算并保存
-        Utils.getData(Utils.arrayNamesList, dataArrayList);
+        Utils.getData(Utils.arrayNamesList, dataArrayList, dataArrayList11);
     }
 }

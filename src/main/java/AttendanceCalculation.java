@@ -32,7 +32,7 @@ public class AttendanceCalculation {
             dataArrayList11.addAll(setDataOne(childSheet));
         }
         //计算并保存
-        Utils.getData(Utils.arrayNamesList, dataArrayList11);
+        Utils.getData(Utils.arrayNamesList, dataArrayList11, dataArrayList11);
     }
 
     public static List<Data> setDataOne(Sheet childSheet) throws Exception {
@@ -127,7 +127,7 @@ public class AttendanceCalculation {
         Sheet childSheet = wbs.getSheetAt(0);
         dataArrayList11.addAll(setDataTwo(childSheet));
         //计算并保存
-        Utils.getData(Utils.arrayNamesList, dataArrayList11);
+        Utils.getData(Utils.arrayNamesList, dataArrayList11, dataArrayList11);
     }
 
     public static List<Data> setDataTwo(Sheet childSheet) throws Exception {

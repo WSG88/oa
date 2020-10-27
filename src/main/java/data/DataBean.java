@@ -14,9 +14,10 @@ public class DataBean {
     public float am;
     public float pm;
     public float nm;
+    public int room = 2;
 
     public DataBean(String name, String day, String d1, String d2, String d3, String d4, String d5, String d6,
-                    float am, float pm, float nm) {
+                    float am, float pm, float nm, int room) {
         this.name = name;
         this.day = day;
         this.d1 = d1;
@@ -28,6 +29,7 @@ public class DataBean {
         this.am = am;
         this.pm = pm;
         this.nm = nm;
+        this.room = room;
     }
 
     @Override
@@ -44,6 +46,7 @@ public class DataBean {
                 ", am=" + am +
                 ", pm=" + pm +
                 ", nm=" + nm +
+                ", room=" + room +
                 '}';
     }
 
@@ -59,11 +62,20 @@ public class DataBean {
     public float NIGHT = 7.95F;
 
     public float getTimes() {
-        if (am + pm > NIGHT && pm > 4.5F) {
-            if (am < 3.5F) {
+        float f1 = 4.5F;
+        float f2 = 3.5F;
+        if (room == 1) {
+            f1 = 4.0F;
+            f2 = 4.0F;
+        } else if (room == 2) {
+            f1 = 4.5F;
+            f2 = 3.5F;
+        }
+        if (am + pm > NIGHT && pm > f1) {
+            if (am < f2) {
                 return m(am + pm - NIGHT) + m(nm);
             }
-            return m(pm - 4.5F) + m(nm);
+            return m(pm - f1) + m(nm);
         } else {
             if (nm + am + pm - NIGHT > 0) {
                 return m(nm + am + pm - NIGHT);
