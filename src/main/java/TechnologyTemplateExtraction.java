@@ -10,7 +10,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TemplateExtraction {
+public class TechnologyTemplateExtraction {
     public static List<File> PATH_LIST = new ArrayList<>();
     public static List<List<String>> SAVE_LIST = new ArrayList<>();
     public static List<String> NUMBER_LIST = new ArrayList<>();
