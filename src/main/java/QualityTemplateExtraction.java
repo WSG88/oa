@@ -132,6 +132,11 @@ public class QualityTemplateExtraction {
                             List<List<String>> list = getDataList(childSheet, rowNum, i, j, s);
                             for (int i1 = 0; i1 < list.size(); i1++) {
                                 标准值 = list.get(i1).get(1);
+//                                char[] ch = 标准值.toCharArray();
+//                                for (char c : ch) {
+//                                    hashSet.add(c);
+//                                }
+
                                 if (标准值.contains("±")
                                         && !标准值.contains("°")
                                         && !标准值.contains("′")
@@ -151,10 +156,6 @@ public class QualityTemplateExtraction {
                                         && !标准值.contains("≯")
                                         && !标准值.contains("-")
                                         ) {
-//                                    char[] ch = 标准值.toCharArray();
-//                                    for (char c : ch) {
-//                                        hashSet.add(c);
-//                                    }
                                     标准值 = 标准值.replace("±±", "±");
                                     标准值 = 标准值.replace("0.0.12", "0.12");
                                     标准值 = 标准值.replace("0.0.43", "0.43");
