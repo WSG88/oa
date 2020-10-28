@@ -8,6 +8,7 @@ import org.apache.poi.ss.usermodel.Workbook;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -83,9 +84,12 @@ public class QualityTemplateExtraction {
     static String 工序号 = "";
     static String 工序名称 = "";
     static String 标准值 = "";
+    static String 最大值 = "";
+    static String 最小值 = "";
     static String 检测方法 = "";
     static String 检验数量 = "";
     static String 检验单位 = "";
+    static HashSet hashSet = new HashSet();
 
     private static void AAA() throws Exception {
         Workbook wbs = Utils.getWorkbook();
@@ -128,6 +132,45 @@ public class QualityTemplateExtraction {
                             List<List<String>> list = getDataList(childSheet, rowNum, i, j, s);
                             for (int i1 = 0; i1 < list.size(); i1++) {
                                 标准值 = list.get(i1).get(1);
+                                if (标准值.contains("±")
+                                        && !标准值.contains("°")
+                                        && !标准值.contains("′")
+                                        && !标准值.contains("R")
+                                        && !标准值.contains("×")
+                                        && !标准值.contains("C")
+                                        && !标准值.contains("∅")
+                                        && !标准值.contains("∅")
+                                        && !标准值.contains("φ")
+                                        && !标准值.contains("G")
+                                        && !标准值.contains("J")
+                                        && !标准值.contains("K")
+                                        && !标准值.contains("S")
+                                        && !标准值.contains("Φ")
+                                        && !标准值.contains("g")
+                                        && !标准值.contains("k")
+                                        && !标准值.contains("≯")
+                                        && !标准值.contains("-")
+                                        ) {
+//                                    char[] ch = 标准值.toCharArray();
+//                                    for (char c : ch) {
+//                                        hashSet.add(c);
+//                                    }
+                                    标准值 = 标准值.replace("±±", "±");
+                                    标准值 = 标准值.replace("0.0.12", "0.12");
+                                    标准值 = 标准值.replace("0.0.43", "0.43");
+                                    标准值 = 标准值.replace("88.5.5", "88.5");
+                                    String[] sss = 标准值.split("±");
+                                    if (sss.length == 2) {
+                                        if (sss[0].length() == 0) {
+                                            sss[0] = "0";
+                                        }
+                                        double d1 = Double.parseDouble(sss[0]);
+                                        double d2 = Double.parseDouble(sss[1]);
+                                        最大值 = String.format("%.2f", d1 + d2);
+                                        最小值 = String.format("%.2f", d1 - d2);
+                                    }
+                                }
+
                                 检测方法 = list.get(i1).get(2);
                                 List<String> stringArrayList = new ArrayList<>();
                                 stringArrayList.add(零件图号);
@@ -137,17 +180,24 @@ public class QualityTemplateExtraction {
                                 stringArrayList.add("");
                                 stringArrayList.add("");
                                 stringArrayList.add(标准值);
-                                stringArrayList.add("");
-                                stringArrayList.add("");
+                                stringArrayList.add(最大值);
+                                stringArrayList.add(最小值);
                                 stringArrayList.add(检测方法);
                                 stringArrayList.add(检验数量);
                                 stringArrayList.add("");
                                 stringArrayList.add(检验单位);
                                 SAVE_LIST.add(stringArrayList);
+
+                                标准值 = "";
+                                最大值 = "";
+                                最小值 = "";
+                                检测方法 = "";
                             }
                         }
                     }
                 }
+                工序号 = "";
+                工序名称 = "";
             }
         }
         wbs.close();
