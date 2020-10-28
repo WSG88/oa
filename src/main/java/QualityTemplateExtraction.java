@@ -78,6 +78,9 @@ public class QualityTemplateExtraction {
         ExcelWriter writer = ExcelUtil.getWriter("C:\\Work\\oa\\file\\_品保_" + System.currentTimeMillis() + ".xls");
         writer.write(SAVE_LIST, true);
         writer.close();
+
+        System.out.println(hashSet);
+        System.out.println(hashSet1);
     }
 
     static String 零件图号 = "";
@@ -90,6 +93,7 @@ public class QualityTemplateExtraction {
     static String 检验数量 = "";
     static String 检验单位 = "";
     static HashSet hashSet = new HashSet();
+    static HashSet hashSet1 = new HashSet();
 
     private static void AAA() throws Exception {
         Workbook wbs = Utils.getWorkbook();
@@ -132,11 +136,51 @@ public class QualityTemplateExtraction {
                             List<List<String>> list = getDataList(childSheet, rowNum, i, j, s);
                             for (int i1 = 0; i1 < list.size(); i1++) {
                                 标准值 = list.get(i1).get(1);
-//                                char[] ch = 标准值.toCharArray();
-//                                for (char c : ch) {
-//                                    hashSet.add(c);
+
+                                标准值 = 标准值.replace("±±", "±");
+                                标准值 = 标准值.replace("0.0.12", "0.12");
+                                标准值 = 标准值.replace("0.0.43", "0.43");
+                                标准值 = 标准值.replace("88.5.5", "88.5");
+                                标准值 = 标准值.replace("\"", "″");
+                                标准值 = 标准值.replace("'", "′");
+
+//                                char[] ch1 = 标准值.toCharArray();
+//                                for (char c1 : ch1) {
+//                                    hashSet1.add(c1);
 //                                }
 
+                                if (标准值.contains("±")
+                                        && (标准值.contains("°") || 标准值.contains("′") || 标准值.contains("″"))
+                                        && !标准值.contains("×")
+                                        && !标准值.contains("～")
+                                        && !标准值.contains("锥")
+                                        && !标准值.contains("度")
+                                        && !标准值.contains("*")
+                                        && !标准值.contains("-")
+                                        && !标准值.contains("≮")
+                                        && !标准值.contains("/")
+                                        && !标准值.contains("◁")
+                                        && !标准值.contains(":")
+                                        ) {
+
+//                                    char[] ch = 标准值.toCharArray();
+//                                    for (char c : ch) {
+//                                        hashSet.add(c);
+//                                    }
+
+                                    String[] sss = 标准值.split("±");
+                                    if (sss.length == 2) {
+                                        String s0 = sss[0];
+                                        String s1 = sss[1];
+                                        if ((s0.contains("°") || s0.contains("′") || s0.contains("″"))
+                                                && (s1.contains("°") || s1.contains("′") || s1.contains("″"))) {
+                                            double d0 = Double.parseDouble(Dms2D(sss[0], 标准值));
+                                            double d1 = Double.parseDouble(Dms2D(sss[1], 标准值));
+                                            最大值 = getDoubleString(d0 + d1);
+                                            最小值 = getDoubleString(d0 - d1);
+                                        }
+                                    }
+                                }
                                 if (标准值.contains("±")
                                         && !标准值.contains("°")
                                         && !标准值.contains("′")
@@ -156,19 +200,15 @@ public class QualityTemplateExtraction {
                                         && !标准值.contains("≯")
                                         && !标准值.contains("-")
                                         ) {
-                                    标准值 = 标准值.replace("±±", "±");
-                                    标准值 = 标准值.replace("0.0.12", "0.12");
-                                    标准值 = 标准值.replace("0.0.43", "0.43");
-                                    标准值 = 标准值.replace("88.5.5", "88.5");
                                     String[] sss = 标准值.split("±");
                                     if (sss.length == 2) {
                                         if (sss[0].length() == 0) {
                                             sss[0] = "0";
                                         }
-                                        double d1 = Double.parseDouble(sss[0]);
-                                        double d2 = Double.parseDouble(sss[1]);
-                                        最大值 = String.format("%.2f", d1 + d2);
-                                        最小值 = String.format("%.2f", d1 - d2);
+                                        double d0 = Double.parseDouble(sss[0]);
+                                        double d1 = Double.parseDouble(sss[1]);
+                                        最大值 = String.format("%.2f", d0 + d1);
+                                        最小值 = String.format("%.2f", d0 - d1);
                                     }
                                 }
 
@@ -204,6 +244,20 @@ public class QualityTemplateExtraction {
         wbs.close();
     }
 
+    private static String getDoubleString(double dd) {
+        int d = (int) dd;
+        int m = (int) ((dd - d) * 60);
+        int s = (int) (((dd - d) * 60 - m) * 60);
+        if (s == 59) {
+            m = m + 1;
+            s = 0;
+        }
+        String s1 = d > 0 ? d + "°" : "";
+        String s2 = m > 0 ? m + "′" : "";
+        String s3 = s > 0 ? s + "″" : "";
+        return s1 + s2 + s3;
+    }
+
     private static List<List<String>> getDataList(Sheet childSheet, int rowNum, int i, int j, String s) {
         List<List<String>> listList = new ArrayList<>();
         for (int k = j + 1; k < rowNum; k++) {
@@ -234,5 +288,41 @@ public class QualityTemplateExtraction {
     public static String getUnit(String s) {
         String number = getNumber(s);
         return s.replace(number, "");
+    }
+
+    public static String Dms2D(String string, String org) {
+        double d = 0, m = 0, s = 0;
+        if (string.contains("°") && string.contains("′") && string.contains("″")) {
+            String[] dString = string.split("°");
+            d = Double.parseDouble(dString[0]);
+            String[] mString = dString[1].split("′");
+            m = Double.parseDouble(mString[0]);
+            s = Double.parseDouble(mString[1].replace("″", ""));
+        } else if (string.contains("°") && string.contains("′")) {
+            String[] dString = string.split("°");
+            d = Double.parseDouble(dString[0]);
+            m = Double.parseDouble(dString[1].replace("′", ""));
+        } else if (string.contains("°") && string.contains("″")) {
+            String[] dString = string.split("°");
+            d = Double.parseDouble(dString[0]);
+            s = Double.parseDouble(dString[1].replace("″", ""));
+        } else if (string.contains("′") && string.contains("″")) {
+            String[] dString = string.split("′");
+            m = Double.parseDouble(dString[0]);
+            s = Double.parseDouble(dString[1].replace("″", ""));
+        } else if (string.contains("°")) {
+            String[] dString = string.split("°");
+            d = Double.parseDouble(dString[0]);
+        } else if (string.contains("′")) {
+            String[] dString = string.split("′");
+            m = Double.parseDouble(dString[0]);
+        } else if (string.contains("″")) {
+            String[] dString = string.split("″");
+            s = Double.parseDouble(dString[0]);
+        } else {
+            System.out.println(string + " " + org);
+            return string;
+        }
+        return String.valueOf(d + m / 60 + s / 60 / 60);
     }
 }
