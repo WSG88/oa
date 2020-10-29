@@ -231,6 +231,20 @@ public class QualityTemplateExtraction {
                                     } else {
                                         hashSet2.add(标准值);
                                     }
+                                } else if (标准值.contains("±")
+                                        && (标准值.contains("R") || 标准值.contains("SR"))
+                                        && !标准值.contains("-")
+                                        && !标准值.contains("/")
+                                        ) {
+                                    String[] sss = 标准值.split("±");
+                                    if (sss.length == 2) {
+                                        double d0 = Double.parseDouble(sss[0].replace("SR", "").replace("R", ""));
+                                        double d1 = Double.parseDouble(sss[1]);
+                                        最大值 = String.format("%.2f", d0 + d1);
+                                        最小值 = String.format("%.2f", d0 - d1);
+                                    } else {
+                                        hashSet2.add(标准值);
+                                    }
                                 } else {
                                     hashSet2.add(标准值);
                                 }
