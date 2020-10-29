@@ -149,7 +149,16 @@ public class QualityTemplateExtraction {
                                 标准值 = 标准值.replace("0.0.43", "0.43");
                                 标准值 = 标准值.replace("88.5.5", "88.5");
                                 标准值 = 标准值.replace("\"", "″");
+                                标准值 = 标准值.replace("〞", "″");
                                 标准值 = 标准值.replace("'", "′");
+                                标准值 = 标准值.replace("(", "（");
+                                标准值 = 标准值.replace(")", "）");
+                                标准值 = 标准值.replace(":", "：");
+                                标准值 = 标准值.replace("..", ".");
+                                标准值 = 标准值.replace("Φ", "∅");
+                                标准值 = 标准值.replace("φ", "∅");
+                                标准值 = 标准值.replace("<", "＜");
+                                标准值 = 标准值.replace(">", "＞");
 
 //                                char[] ch1 = 标准值.toCharArray();
 //                                for (char c1 : ch1) {
