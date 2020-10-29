@@ -8,6 +8,7 @@ import org.apache.poi.ss.usermodel.Workbook;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -81,6 +82,11 @@ public class QualityTemplateExtraction {
 
         System.out.println(hashSet);
         System.out.println(hashSet1);
+        System.out.println(hashSet2);
+        List list = Arrays.asList(hashSet2.toArray());
+        ExcelWriter writer1 = ExcelUtil.getWriter("C:\\Work\\oa\\file\\品保数据解释.xls");
+        writer1.write(list, true);
+        writer1.close();
     }
 
     static String 零件图号 = "";
@@ -94,6 +100,7 @@ public class QualityTemplateExtraction {
     static String 检验单位 = "";
     static HashSet hashSet = new HashSet();
     static HashSet hashSet1 = new HashSet();
+    static HashSet hashSet2 = new HashSet();
 
     private static void AAA() throws Exception {
         Workbook wbs = Utils.getWorkbook();
@@ -174,14 +181,17 @@ public class QualityTemplateExtraction {
                                         String s1 = sss[1];
                                         if ((s0.contains("°") || s0.contains("′") || s0.contains("″"))
                                                 && (s1.contains("°") || s1.contains("′") || s1.contains("″"))) {
-                                            double d0 = Double.parseDouble(Dms2D(sss[0], 标准值));
-                                            double d1 = Double.parseDouble(Dms2D(sss[1], 标准值));
+                                            double d0 = Double.parseDouble(dms2D(sss[0], 标准值));
+                                            double d1 = Double.parseDouble(dms2D(sss[1], 标准值));
                                             最大值 = getDoubleString(d0 + d1);
                                             最小值 = getDoubleString(d0 - d1);
+                                        } else {
+                                            hashSet2.add(标准值);
                                         }
+                                    } else {
+                                        hashSet2.add(标准值);
                                     }
-                                }
-                                if (标准值.contains("±")
+                                } else if (标准值.contains("±")
                                         && !标准值.contains("°")
                                         && !标准值.contains("′")
                                         && !标准值.contains("R")
@@ -209,7 +219,11 @@ public class QualityTemplateExtraction {
                                         double d1 = Double.parseDouble(sss[1]);
                                         最大值 = String.format("%.2f", d0 + d1);
                                         最小值 = String.format("%.2f", d0 - d1);
+                                    } else {
+                                        hashSet2.add(标准值);
                                     }
+                                } else {
+                                    hashSet2.add(标准值);
                                 }
 
                                 检测方法 = list.get(i1).get(2);
@@ -290,7 +304,7 @@ public class QualityTemplateExtraction {
         return s.replace(number, "");
     }
 
-    public static String Dms2D(String string, String org) {
+    public static String dms2D(String string, String org) {
         double d = 0, m = 0, s = 0;
         if (string.contains("°") && string.contains("′") && string.contains("″")) {
             String[] dString = string.split("°");
