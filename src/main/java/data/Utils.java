@@ -19,7 +19,7 @@ import java.util.*;
 public class Utils {
 
     public static String DATABASE_NAME_2 = "oatime";
-    public static String FILE_PATH = "C:\\Work\\oa\\file\\";
+    public static String FILE_PATH = "d:\\Work\\oa\\file\\";
     public static String YEAR_MONTH = "202008";
     public static String FILE_NAME = "2.81.xls";
     public static int ROOM = 2;
