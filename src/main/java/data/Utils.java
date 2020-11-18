@@ -1,16 +1,12 @@
 package data;
 
 import cn.hutool.core.date.DateUtil;
-import cn.hutool.crypto.SecureUtil;
-import cn.hutool.db.Db;
-import cn.hutool.db.Entity;
 import cn.hutool.poi.excel.ExcelUtil;
 import cn.hutool.poi.excel.ExcelWriter;
 import org.apache.poi.ss.usermodel.*;
 
 import java.io.FileInputStream;
 import java.io.InputStream;
-import java.sql.SQLException;
 import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -18,7 +14,6 @@ import java.util.*;
 
 public class Utils {
 
-    public static String DATABASE_NAME_2 = "oatime";
     public static String FILE_PATH = "d:\\Work\\oa\\file\\";
     public static String YEAR_MONTH = "202008";
     public static String FILE_NAME = "2.81.xls";
@@ -462,11 +457,11 @@ public class Utils {
     }
 
     public static void printList() {
-        ExcelWriter writer0 = ExcelUtil.getWriter(Utils.FILE_PATH + Utils.YEAR_MONTH + "异常考勤.xls");
+        ExcelWriter writer0 = ExcelUtil.getWriter(Utils.FILE_PATH + Utils.YEAR_MONTH + "异常考勤.xlsx");
         writer0.write(listList0, true);
         writer0.close();
 
-        ExcelWriter writer1 = ExcelUtil.getWriter(Utils.FILE_PATH + Utils.YEAR_MONTH + "迟到考勤.xls");
+        ExcelWriter writer1 = ExcelUtil.getWriter(Utils.FILE_PATH + Utils.YEAR_MONTH + "迟到考勤.xlsx");
         writer1.write(listList1, true);
         writer1.close();
     }
@@ -528,74 +523,6 @@ public class Utils {
             long l2 = DateUtil.parse(data.date + "08:06", "yyyyMMddHH:mm").toCalendar().getTimeInMillis();
             if (l1 > l2) {
                 setListData(data, room, 1);
-            }
-        }
-    }
-
-    public static void saveToDatabase(Data data, int room) {
-        //检查数据
-        Utils.checkData(data, Utils.ROOM);
-
-        //补全数据存入数据库
-        String name = data.name;
-        String date = data.date;
-        List<String> list = data.list;
-
-        String d1 = list.get(0);
-        String d2 = list.get(1);
-        String d3 = list.get(2);
-        String d4 = list.get(3);
-        String d5 = list.get(4);
-        String d6 = list.get(5);
-
-        d1 = Utils.getFirstTime(date, d1, d2, d3, d4, data);
-        d3 = Utils.getFirstTime(date, d3, d2, d3, d4, data);
-        d5 = Utils.getFirstTime(date, d5, d2, d3, d4, data);
-        d6 = Utils.getLastCompleteTime(d6);
-
-        d4 = Utils.getCompleteTime1(d4);
-
-        String id = SecureUtil.md5(name + date);
-
-        float f1 = Utils.timeDifference(date + d1, date + d2);
-        float f2 = Utils.timeDifference(date + d3, date + d4);
-        float f3 = Utils.timeDifference(date + d5, date + d6);
-
-        try {
-            //插入数据
-            Db.use().insert(
-                    Entity.create(Utils.DATABASE_NAME_2)
-                            .set("id", id)
-                            .set("name", name)
-                            .set("day", date)
-                            .set("d1", d1)
-                            .set("d2", d2)
-                            .set("d3", d3)
-                            .set("d4", d4)
-                            .set("d5", d5)
-                            .set("d6", d6)
-                            .set("m", f1)
-                            .set("a", f2)
-                            .set("n", f3)
-                            .set("room", room));
-        } catch (SQLException e) {
-            try {
-                //修改的数据
-                Db.use().update(
-                        Entity.create().set("d1", d1)
-                                .set("name", name)
-                                .set("day", date)
-                                .set("d2", d2)
-                                .set("d3", d3)
-                                .set("d4", d4)
-                                .set("d5", d5)
-                                .set("d6", d6)
-                                .set("m", f1)
-                                .set("a", f2)
-                                .set("n", f3),
-                        Entity.create(Utils.DATABASE_NAME_2).set("id", id)
-                );
-            } catch (SQLException e1) {
             }
         }
     }

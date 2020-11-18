@@ -171,9 +171,9 @@ public class AttendanceCalculation {
     }
 
     public static void again() throws Exception {
-        Utils.YEAR_MONTH = "202009";
-        Utils.FILE_NAME = "202009_1车间补.xlsx";
+        Utils.YEAR_MONTH = YEAR + MONTH;
         Utils.ROOM = 1;
+        Utils.FILE_NAME = Utils.YEAR_MONTH + "__" + MONTH + "车间补.xlsx";
         Utils.clear();
 
         Workbook wbs = Utils.getWorkbook();
