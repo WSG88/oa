@@ -16,15 +16,16 @@ public class AttendanceCalculation {
 
         Utils.clearList();
         System.out.println("----------------11111111111111111111111111111\n\n");
-        testOne();
+        Utils.ROOM = 1;
+        again();
         Thread.sleep(5000);
         System.out.println("----------------22222222222222222222222222222\n\n");
-        testTwo();
+        Utils.ROOM = 2;
+        again();
         Utils.printList();
     }
 
     public static void testOne() throws Exception {
-        Utils.ROOM = 1;
         Utils.FILE_NAME = Utils.ROOM + "." + MONTH + ".xls";
         Utils.clear();
         List<Data> dataArrayList11 = new ArrayList<>();
@@ -120,7 +121,6 @@ public class AttendanceCalculation {
     }
 
     public static void testTwo() throws Exception {
-        Utils.ROOM = 2;
         Utils.FILE_NAME = Utils.ROOM + "." + MONTH + ".xls";
         Utils.clear();
         List<Data> dataArrayList11 = new ArrayList<>();
@@ -173,7 +173,7 @@ public class AttendanceCalculation {
     public static void again() throws Exception {
         Utils.YEAR_MONTH = YEAR + MONTH;
         Utils.ROOM = 1;
-        Utils.FILE_NAME = Utils.YEAR_MONTH + "__" + MONTH + "车间补.xlsx";
+        Utils.FILE_NAME = Utils.YEAR_MONTH + "__" + Utils.ROOM + "车间补.xlsx";
         Utils.clear();
 
         Workbook wbs = Utils.getWorkbook();

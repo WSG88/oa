@@ -450,20 +450,26 @@ public class Utils {
 
     public static List<List<String>> listList0 = new ArrayList<>();
     public static List<List<String>> listList1 = new ArrayList<>();
+    public static List<List<String>> listList2 = new ArrayList<>();
 
     public static void clearList() {
         listList0.clear();
         listList1.clear();
+        listList2.clear();
     }
 
     public static void printList() {
-        ExcelWriter writer0 = ExcelUtil.getWriter(Utils.FILE_PATH + Utils.YEAR_MONTH + "异常考勤.xlsx");
+        ExcelWriter writer0 = ExcelUtil.getWriter(Utils.FILE_PATH + Utils.YEAR_MONTH + "_异常.xlsx");
         writer0.write(listList0, true);
         writer0.close();
 
-        ExcelWriter writer1 = ExcelUtil.getWriter(Utils.FILE_PATH + Utils.YEAR_MONTH + "迟到考勤.xlsx");
+        ExcelWriter writer1 = ExcelUtil.getWriter(Utils.FILE_PATH + Utils.YEAR_MONTH + "_迟到.xlsx");
         writer1.write(listList1, true);
         writer1.close();
+
+        ExcelWriter writer2 = ExcelUtil.getWriter(Utils.FILE_PATH + Utils.YEAR_MONTH + "_缺勤.xlsx");
+        writer2.write(listList2, true);
+        writer2.close();
     }
 
     //type 0异常1迟到2早退3缺勤
@@ -477,6 +483,8 @@ public class Utils {
             listList0.add(list);
         } else if (type == 1) {
             listList1.add(list);
+        } else if (type == 2) {
+            listList2.add(list);
         }
     }
 
@@ -510,10 +518,10 @@ public class Utils {
 
         //是否请假
         if (list.size() == 2) {
-            setListData(data, room, 0);
+            setListData(data, room, 2);
         } else if (list.size() == 4) {
             if (!(list.get(0).startsWith("07") || list.get(0).startsWith("08"))) {
-                setListData(data, room, 0);
+                setListData(data, room, 2);
             }
         }
         //上午迟到
