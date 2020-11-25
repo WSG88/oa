@@ -50,6 +50,30 @@ public class Utils {
                 || "陈卫锋".equals(name)
                 || "程后盛".equals(name)
                 || "张世玉".equals(name)
+
+                || "冯金平".equals(name)
+                || "苏俊潇".equals(name)
+                || "夏宇恒".equals(name)
+                || "许凌玉".equals(name)
+                || "郑彦俊".equals(name)
+                || "汪胜利".equals(name)
+                || "周谟林".equals(name)
+                || "王之检".equals(name)
+                || "周左文".equals(name)
+                || "谭强".equals(name)
+                || "徐柳根".equals(name)
+                || "何巧珍".equals(name)
+                || "臧世凯".equals(name)
+                || "刘翔".equals(name)
+                || "蒋婵".equals(name)
+                || "程后平".equals(name)
+                || "危发强".equals(name)
+                || "李星星".equals(name)
+                || "王振宇".equals(name)
+                || "刘三波".equals(name)
+                || "严命坤".equals(name)
+                || "虞涛".equals(name)
+                || "金绍雷".equals(name)
                 || name.length() < 2) {
             return false;
         }
@@ -459,15 +483,18 @@ public class Utils {
     }
 
     public static void printList() {
-        ExcelWriter writer0 = ExcelUtil.getWriter(Utils.FILE_PATH + Utils.YEAR_MONTH + "_异常.xlsx");
+        ExcelWriter writer0 = ExcelUtil.getWriter(Utils.FILE_PATH + Utils.YEAR_MONTH + "_" + Utils.ROOM +
+                "_异常.xlsx");
         writer0.write(listList0, true);
         writer0.close();
 
-        ExcelWriter writer1 = ExcelUtil.getWriter(Utils.FILE_PATH + Utils.YEAR_MONTH + "_迟到.xlsx");
+        ExcelWriter writer1 = ExcelUtil.getWriter(Utils.FILE_PATH + Utils.YEAR_MONTH + "_" + Utils.ROOM +
+                "_迟到.xlsx");
         writer1.write(listList1, true);
         writer1.close();
 
-        ExcelWriter writer2 = ExcelUtil.getWriter(Utils.FILE_PATH + Utils.YEAR_MONTH + "_缺勤.xlsx");
+        ExcelWriter writer2 = ExcelUtil.getWriter(Utils.FILE_PATH + Utils.YEAR_MONTH + "_" + Utils.ROOM +
+                "_缺勤.xlsx");
         writer2.write(listList2, true);
         writer2.close();
     }
@@ -560,16 +587,7 @@ public class Utils {
         saveToExcel(mapListDataBean, "元");
     }
 
-    public static void getData(List<String> arrayNamesList, List<Data> dataArrayList, List<Data> dataArrayList11) throws Exception {
-        //元数据保存到EXCEL
-        //Utils.copyData(Utils.arrayNamesList, dataArrayList11);
-
-//        //元数据保存到DB
-//        for (Data data : dataArrayList) {
-//            Utils.saveToDatabase(data, Utils.ROOM);
-//        }
-
-
+    public static void getData(List<String> arrayNamesList, List<Data> dataArrayList) throws Exception {
         LinkedHashMap<String, List<DataBean>> mapListDataBean = new LinkedHashMap<>();
         for (String name : arrayNamesList) {
             List<DataBean> arrayDataBean = new ArrayList<>();
@@ -625,6 +643,7 @@ public class Utils {
 
     private static void saveToExcel(Map<String, List<DataBean>> mapListDataBean, String fileName) {
         List<List<String>> rowsList = new ArrayList<>();
+        List<List<String>> rowsList1 = new ArrayList<>();
 
         List<String> dayList = Utils.getDaysOfMonth(Utils.YEAR_MONTH);
 
@@ -642,9 +661,14 @@ public class Utils {
             nameList.add("" + name);
             nameList.add("" + c + "d");
             nameList.add("" + Utils.getDecimals(n) + "h");
-            //汇总数据
-            System.out.println(nameList);
             rowsList.add(nameList);
+
+            //汇总数据
+            List<String> lll = new ArrayList<>();
+            lll.add(name);
+            lll.add("" + c);
+            lll.add("" + Utils.getDecimals(n));
+            rowsList1.add(lll);
 
             //日期数据
             List<String> dayList1 = new ArrayList<>();
@@ -716,6 +740,7 @@ public class Utils {
         }
 
         Utils.toExcel(rowsList, Utils.FILE_PATH + Utils.YEAR_MONTH + "_" + fileName + "_" + Utils.ROOM + "车间.xlsx");
+        Utils.toExcel(rowsList1, Utils.FILE_PATH + Utils.YEAR_MONTH + "_" + fileName + "_" + Utils.ROOM + "车间汇总.xlsx");
 
     }
 
