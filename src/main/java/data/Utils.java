@@ -472,9 +472,9 @@ public class Utils {
         }
     }
 
-    public static List<List<String>> listList0 = new ArrayList<>();
-    public static List<List<String>> listList1 = new ArrayList<>();
-    public static List<List<String>> listList2 = new ArrayList<>();
+    public static List<List<List<String>>> listList0 = new ArrayList<>();
+    public static List<List<List<String>>> listList1 = new ArrayList<>();
+    public static List<List<List<String>>> listList2 = new ArrayList<>();
 
     public static void clearList() {
         listList0.clear();
@@ -503,15 +503,18 @@ public class Utils {
     public static void setListData(Data data, int room, int type) {
         List<String> list = new ArrayList<>();
         list.add(room + "车间 ");
-        list.add(data.date);
         list.add(data.name);
+        list.add(data.date);
         list.addAll(data.list);
+
+        List<List<String>> rowsList = new ArrayList<>();
+        rowsList.add(list);
         if (type == 0) {
-            listList0.add(list);
+            listList0.add(rowsList);
         } else if (type == 1) {
-            listList1.add(list);
+            listList1.add(rowsList);
         } else if (type == 2) {
-            listList2.add(list);
+            listList2.add(rowsList);
         }
     }
 
