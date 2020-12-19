@@ -36,6 +36,8 @@ public class Utils {
                 || "".equals(name)
                 || "正常".equals(name)
                 || "陈卫平".equals(name)
+                || "王思刚".equals(name)
+                || "苏金丽".equals(name)
                 || "何仁易".equals(name)
                 || "王扬威".equals(name)
                 || "陈鹏".equals(name)
@@ -51,29 +53,29 @@ public class Utils {
                 || "程后盛".equals(name)
                 || "张世玉".equals(name)
 
-                || "冯金平".equals(name)
-                || "苏俊潇".equals(name)
-                || "夏宇恒".equals(name)
-                || "许凌玉".equals(name)
-                || "郑彦俊".equals(name)
-                || "汪胜利".equals(name)
-                || "周谟林".equals(name)
-                || "王之检".equals(name)
-                || "周左文".equals(name)
-                || "谭强".equals(name)
-                || "徐柳根".equals(name)
-                || "何巧珍".equals(name)
-                || "臧世凯".equals(name)
-                || "刘翔".equals(name)
-                || "蒋婵".equals(name)
-                || "程后平".equals(name)
-                || "危发强".equals(name)
-                || "李星星".equals(name)
-                || "王振宇".equals(name)
-                || "刘三波".equals(name)
-                || "严命坤".equals(name)
-                || "虞涛".equals(name)
-                || "金绍雷".equals(name)
+//                || "冯金平".equals(name)
+//                || "苏俊潇".equals(name)
+//                || "夏宇恒".equals(name)
+//                || "许凌玉".equals(name)
+//                || "郑彦俊".equals(name)
+//                || "汪胜利".equals(name)
+//                || "周谟林".equals(name)
+//                || "王之检".equals(name)
+//                || "周左文".equals(name)
+//                || "谭强".equals(name)
+//                || "徐柳根".equals(name)
+//                || "何巧珍".equals(name)
+//                || "臧世凯".equals(name)
+//                || "刘翔".equals(name)
+//                || "蒋婵".equals(name)
+//                || "程后平".equals(name)
+//                || "危发强".equals(name)
+//                || "李星星".equals(name)
+//                || "王振宇".equals(name)
+//                || "刘三波".equals(name)
+//                || "严命坤".equals(name)
+//                || "虞涛".equals(name)
+//                || "金绍雷".equals(name)
                 || name.length() < 2) {
             return false;
         }
@@ -472,9 +474,9 @@ public class Utils {
         }
     }
 
-    public static List<List<String>> listList0 = new ArrayList<>();
-    public static List<List<String>> listList1 = new ArrayList<>();
-    public static List<List<String>> listList2 = new ArrayList<>();
+    public static List<List<List<String>>> listList0 = new ArrayList<>();
+    public static List<List<List<String>>> listList1 = new ArrayList<>();
+    public static List<List<List<String>>> listList2 = new ArrayList<>();
 
     public static void clearList() {
         listList0.clear();
@@ -503,15 +505,18 @@ public class Utils {
     public static void setListData(Data data, int room, int type) {
         List<String> list = new ArrayList<>();
         list.add(room + "车间 ");
-        list.add(data.date);
         list.add(data.name);
+        list.add(data.date);
         list.addAll(data.list);
+
+        List<List<String>> rowsList = new ArrayList<>();
+        rowsList.add(list);
         if (type == 0) {
-            listList0.add(list);
+            listList0.add(rowsList);
         } else if (type == 1) {
-            listList1.add(list);
+            listList1.add(rowsList);
         } else if (type == 2) {
-            listList2.add(list);
+            listList2.add(rowsList);
         }
     }
 
@@ -627,6 +632,14 @@ public class Utils {
                     float f1 = Utils.timeDifference(date + d1, date + d2);
                     float f2 = Utils.timeDifference(date + d3, date + d4);
                     float f3 = Utils.timeDifference(date + d5, date + d6);
+
+                    if (f1 > 6 && f2 == 0) {//夜班数据
+                        System.out.println(data+"/ "+f1+"/ "+f2+"/ "+f3);
+                        f1 = 0;
+                    }
+                    if (f1 > 0 && f2 > 5.5 && (Double.parseDouble(d4.substring(0, 2)) > 17)) {//晚上加班不打卡扣0.5
+                        f2 = f2 - 0.5f;
+                    }
 
                     DataBean dataBean = new DataBean(name, date, dd1, dd2, dd3, dd4, dd5, dd6, f1, f2, f3, Utils.ROOM);
                     arrayDataBean.add(dataBean);
