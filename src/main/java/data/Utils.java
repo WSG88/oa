@@ -634,7 +634,7 @@ public class Utils {
                     float f3 = Utils.timeDifference(date + d5, date + d6);
 
                     if (f1 > 6 && f2 == 0) {//夜班数据
-                        System.out.println(data+"/ "+f1+"/ "+f2+"/ "+f3);
+//                        System.out.println("夜班数据 "+data+"/ "+f1+"/ "+f2+"/ "+f3);
                         f1 = 0;
                     }
                     if (f1 > 0 && f2 > 5.5 && (Double.parseDouble(d4.substring(0, 2)) > 17)) {//晚上加班不打卡扣0.5
@@ -752,9 +752,13 @@ public class Utils {
             rowsList.add(timeListN);
         }
 
-        Utils.toExcel(rowsList, Utils.FILE_PATH + Utils.YEAR_MONTH + "_" + fileName + "_" + Utils.ROOM + "车间.xlsx");
-        Utils.toExcel(rowsList1, Utils.FILE_PATH + Utils.YEAR_MONTH + "_" + fileName + "_" + Utils.ROOM + "车间汇总.xlsx");
-
+        if(fileName==null||fileName.length()==0){
+            Utils.toExcel(rowsList, Utils.FILE_PATH + Utils.YEAR_MONTH + "_" + Utils.ROOM + "车间.xlsx");
+            Utils.toExcel(rowsList1, Utils.FILE_PATH + Utils.YEAR_MONTH + "_" + Utils.ROOM + "车间汇总.xlsx");
+        }else{
+            Utils.toExcel(rowsList, Utils.FILE_PATH + Utils.YEAR_MONTH + "_" + fileName + "_" + Utils.ROOM + "车间.xlsx");
+            Utils.toExcel(rowsList1, Utils.FILE_PATH + Utils.YEAR_MONTH + "_" + fileName + "_" + Utils.ROOM + "车间汇总.xlsx");
+        }
     }
 
 
