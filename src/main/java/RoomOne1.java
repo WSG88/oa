@@ -15,9 +15,9 @@ public class RoomOne1 {
     public static void main(String[] args) throws Exception {
         Utils.clearList();
         Utils.ROOM = 1;
-        Utils.YEAR_MONTH = "202011";
+        Utils.YEAR_MONTH = "202012";
         Utils.FILE_PATH = "d:\\Work\\oa\\file\\";
-        Utils.FILE_NAME = "1111.xlsx";
+        Utils.FILE_NAME = "2.202012.xlsx";
         Utils.clear();
 
         Workbook wbs = Utils.getWorkbook();
@@ -26,20 +26,17 @@ public class RoomOne1 {
 
         List<Data> dataArrayList = new ArrayList<>();
         Map<String, ArrayList<String>> map = new HashMap<>();
-        for (int line = 0; line < childSheet.getLastRowNum() + 1; line++) {
-            String name = Utils.readExcelData(childSheet, line - 1, 0);
-            String date = Utils.readExcelData(childSheet, line - 1, 1);
-            String s = Utils.readExcelData(childSheet, line - 1, 2);
+        for (int line = 1; line < childSheet.getLastRowNum() + 1; line++) {
+            String name = Utils.readExcelData(childSheet, line , 2);
+            String date = Utils.readExcelData(childSheet, line , 4);
+            String s = Utils.readExcelData(childSheet, line , 5);
             //
             if (!Utils.isAdd(name)) {
                 continue;
             }
             Utils.add(name);
 
-            String key = name + "," + date;
-            if (key.contains("2020-12-") || key.contains("2020-10-")) {
-                continue;
-            }
+            String key = name + "," + date.replace("-","");
             ArrayList<String> arrayList = map.get(key);
             if (arrayList == null) {
                 arrayList = new ArrayList<>();
@@ -51,21 +48,80 @@ public class RoomOne1 {
             }
             map.put(key, arrayList);
         }
-        System.out.println(map);
+//        System.out.println(map);
 
         List<String> newList = Utils.arrayNamesList.stream().distinct().collect(Collectors.toList());
         Utils.arrayNamesList=newList;
 
-        System.out.println(Utils.arrayNamesList);
+//        System.out.println(Utils.arrayNamesList);
 
         for (String name : Utils.arrayNamesList) {
 
-            for (int i1 = 0; i1 < DAY; i1++) {
-                String key = name + ",2020-11-" + i1;
-                if (i1 < 10) {
-                    key = name + ",2020-11-0" + i1;
-                }
+            for (int i1 = 1; i1 < DAY; i1++) {
+                String date = Utils.YEAR_MONTH + String.format("%02d", i1);
+                String key = name + "," + date;
+//                System.out.println(key);
                 ArrayList<String> arrayList = map.get(key);
+                //培训
+                if ("20201226".equals(date)) {
+                    if (
+                            "	蓝天航	".trim().equals(name) ||
+                                    "	肖立军	".trim().equals(name) ||
+                                    "	程宇文	".trim().equals(name) ||
+                                    "	危发强	".trim().equals(name) ||
+                                    "	陈震宇	".trim().equals(name) ||
+                                    "	刘小龙	".trim().equals(name) ||
+                                    "	万立妹	".trim().equals(name) ||
+                                    "	万运来	".trim().equals(name) ||
+                                    "	曹明光	".trim().equals(name) ||
+                                    "	张康文	".trim().equals(name) ||
+                                    "	葛银保	".trim().equals(name) ||
+                                    "	张新丽	".trim().equals(name) ||
+                                    "	王思刚	".trim().equals(name) ||
+                                    "	苏金丽	".trim().equals(name) ||
+                                    "	程厚阳	".trim().equals(name) ||
+                                    "	严命坤	".trim().equals(name) ||
+                                    "	黄亦龙	".trim().equals(name) ||
+                                    "	王章美	".trim().equals(name) ||
+                                    "	江鹏	".trim().equals(name) ||
+                                    "	虞涛	".trim().equals(name) ||
+                                    "	陈亚军	".trim().equals(name) ||
+                                    "	张志旗	".trim().equals(name) ||
+                                    "	陈妍	".trim().equals(name) ||
+                                    "	徐靖	".trim().equals(name) ||
+                                    "	苏芳华	".trim().equals(name) ||
+                                    "	刘镇	".trim().equals(name) ||
+                                    "	张学成	".trim().equals(name) ||
+                                    "	方兴兴	".trim().equals(name) ||
+                                    "	沈长征	".trim().equals(name) ||
+                                    "	侯木财	".trim().equals(name) ||
+                                    "	王金宝	".trim().equals(name) ||
+                                    "	蒋婵	".trim().equals(name) ||
+                                    "	罗飞	".trim().equals(name) ||
+                                    "	邵泽球	".trim().equals(name) ||
+                                    "	张涛	".trim().equals(name) ||
+                                    "	张祖胜	".trim().equals(name) ||
+                                    "	张欢	".trim().equals(name) ||
+                                    "	李开立	".trim().equals(name) ||
+                                    "	周谟林	".trim().equals(name) ||
+                                    "	杜传国	".trim().equals(name) ||
+                                    "	刘太华	".trim().equals(name) ||
+                                    "	许凌玉	".trim().equals(name) ||
+                                    "	徐慧林	".trim().equals(name) ||
+                                    "	苏俊潇	".trim().equals(name) ||
+                                    "	章水根	".trim().equals(name) ||
+                                    "	方智鑫	".trim().equals(name) ||
+                                    "	郑彦俊	".trim().equals(name) ||
+                                    "	张志成	".trim().equals(name)
+                    ) {
+                        arrayList=new ArrayList<>();
+                        arrayList.add("07:59");
+                        arrayList.add("11:31");
+                        arrayList.add("11:59");
+                        arrayList.add("16:31");
+                    }
+                }
+
                 if (arrayList != null && !arrayList.isEmpty()) {
                     if (arrayList.size() == 7) {
 
@@ -116,13 +172,12 @@ public class RoomOne1 {
 //                    }
 
                     Utils.completeQueQing(arrayList);
-                    String date = Utils.YEAR_MONTH + String.format("%02d", i1);
                     dataArrayList.add(new Data(name, date, arrayList));
                 }
             }
 
         }
-        System.out.println(dataArrayList);
+//        System.out.println(dataArrayList);
 
         //计算并保存
         Utils.getData(Utils.arrayNamesList, dataArrayList);
