@@ -543,7 +543,7 @@ public class Utils {
             }
         }
         //打卡次数缺失
-        if (list.size() == 1 || list.size() == 3 || list.size() == 5) {
+        if (list.size() == 1 || list.size() == 3 || list.size() == 5 || list.size() > 6) {
             setListData(data, room, 0);
             return;
         }
