@@ -368,7 +368,8 @@ public class Utils {
                         s = cell.getStringCellValue();
                         break;
                     case FORMULA:
-                        s = cell.getCellFormula();
+                        DecimalFormat df = new DecimalFormat("0.00");
+                        s = df.format(cell.getNumericCellValue());
                         break;
                     case BLANK:
                         break;
@@ -752,10 +753,10 @@ public class Utils {
             rowsList.add(timeListN);
         }
 
-        if(fileName==null||fileName.length()==0){
+        if (fileName == null || fileName.length() == 0) {
             Utils.toExcel(rowsList, Utils.FILE_PATH + Utils.YEAR_MONTH + "_" + Utils.ROOM + "车间.xlsx");
             Utils.toExcel(rowsList1, Utils.FILE_PATH + Utils.YEAR_MONTH + "_" + Utils.ROOM + "车间汇总.xlsx");
-        }else{
+        } else {
             Utils.toExcel(rowsList, Utils.FILE_PATH + Utils.YEAR_MONTH + "_" + fileName + "_" + Utils.ROOM + "车间.xlsx");
             Utils.toExcel(rowsList1, Utils.FILE_PATH + Utils.YEAR_MONTH + "_" + fileName + "_" + Utils.ROOM + "车间汇总.xlsx");
         }
