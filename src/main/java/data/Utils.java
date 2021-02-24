@@ -14,7 +14,7 @@ import java.util.*;
 
 public class Utils {
 
-    public static String FILE_PATH = "d:\\Work\\oa\\file\\";
+    public static String FILE_PATH = "f:\\Work\\oa\\file\\";
     public static String YEAR_MONTH = "202008";
     public static String FILE_NAME = "2.81.xls";
     public static int ROOM = 2;
@@ -682,6 +682,8 @@ public class Utils {
             lll.add(name);
             lll.add("" + c);
             lll.add("" + Utils.getDecimals(n));
+            lll.add("" + Utils.getDecimals(n)/8);
+            lll.add("" + (c+Utils.getDecimals(n)/8));
             rowsList1.add(lll);
 
             //日期数据
