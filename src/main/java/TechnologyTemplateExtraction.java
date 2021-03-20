@@ -26,7 +26,8 @@ public class TechnologyTemplateExtraction {
         PATH_NAME = "错误\\";
         PATH_NAME = "";
 
-        File[] files = FileUtil.ls("D:\\ERP&MES\\天一指令\\" + PATH_NAME);
+//        File[] files = FileUtil.ls("D:\\ERP&MES\\天一指令\\" + PATH_NAME);
+        File[] files = FileUtil.ls("E:\\信息办\\123123\\" + PATH_NAME);
         for (int i = 0; i < files.length; i++) {
             File file = files[i];
             if (file.isDirectory()) {
@@ -50,7 +51,7 @@ public class TechnologyTemplateExtraction {
                 File file = sub.get(i);
                 Utils.FILE_PATH = file.getParent() + "\\";
                 Utils.FILE_NAME = file.getName();
-//                System.out.println(file.getAbsolutePath());
+                System.out.println(file.getAbsolutePath());
                 AAA();
             }
         }
@@ -174,7 +175,12 @@ public class TechnologyTemplateExtraction {
             //工序号
             String a = list.get(0);
             //
-            String a1 = String.valueOf(Double.parseDouble(a));
+            String a1 = null;
+            try {
+                a1 = String.valueOf(Double.parseDouble(a));
+            } catch (NumberFormatException e) {
+                a1=a;
+            }
             //工序名称
             String b = list.get(1);
             //工序内容

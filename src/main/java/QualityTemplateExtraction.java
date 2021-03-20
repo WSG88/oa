@@ -28,7 +28,8 @@ public class QualityTemplateExtraction {
         PATH_NAME = "错误\\";
         PATH_NAME = "";
 
-        File[] files = FileUtil.ls("D:\\ERP&MES\\天一指令\\" + PATH_NAME);
+//        File[] files = FileUtil.ls("D:\\ERP&MES\\天一指令\\" + PATH_NAME);
+        File[] files = FileUtil.ls("E:\\信息办\\123123\\" + PATH_NAME);
         for (int i = 0; i < files.length; i++) {
             File file = files[i];
             if (file.isDirectory()) {
@@ -52,7 +53,7 @@ public class QualityTemplateExtraction {
                 File file = sub.get(i);
                 Utils.FILE_PATH = file.getParent() + "\\";
                 Utils.FILE_NAME = file.getName();
-//                System.out.println(file.getAbsolutePath());
+                System.out.println(file.getAbsolutePath());
                 AAA();
             }
         }
@@ -239,7 +240,7 @@ public class QualityTemplateExtraction {
                                     String[] sss = 标准值.split("±");
                                     if (sss.length == 2) {
                                         double d0 = Double.parseDouble(sss[0].replace("SR", "").replace("R", ""));
-                                        double d1 = Double.parseDouble(sss[1]);
+                                        double d1 = Double.parseDouble(sss[1].replace("（典型）",""));
                                         最大值 = String.format("%.2f", d0 + d1);
                                         最小值 = String.format("%.2f", d0 - d1);
                                     } else {
