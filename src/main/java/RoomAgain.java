@@ -14,13 +14,13 @@ public class RoomAgain {
     public static void main(String[] args) throws Exception {
         Utils.clear();
         Utils.clearList();
-        Utils.YEAR_MONTH = "202101";
+        Utils.YEAR_MONTH = "202102";
         Utils.ROOM = 1;
-        Utils.FILE_NAME = "202101_1车间1.xlsx";
+        Utils.FILE_NAME = "202102_1车间1.xlsx";
         List<Data> dataArrayList = new ArrayList<>();
         Workbook wbs = Utils.getWorkbook();
         Sheet childSheet = wbs.getSheetAt(0);
-        for (int rowNumber = 0; rowNumber < childSheet.getLastRowNum() + 1; rowNumber = rowNumber + 13) {
+        for (int rowNumber = 0; rowNumber < childSheet.getLastRowNum() + 1; rowNumber = rowNumber + 14) {
             String name = Utils.readExcel(childSheet, rowNumber, 0);
             if (!Utils.isAdd(name)) {
                 continue;

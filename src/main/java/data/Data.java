@@ -6,6 +6,7 @@ public class Data {
     public String name;
     public String date;
     public List<String> list;
+    public int error;
 
     public Data(String name, String date, List<String> list) {
         this.name = name;

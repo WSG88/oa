@@ -15,6 +15,7 @@ public class DataBean {
     public float pm;
     public float nm;
     public int room = 2;
+    public int error;
 
     public DataBean(String name, String day, String d1, String d2, String d3, String d4, String d5, String d6,
                     float am, float pm, float nm, int room) {

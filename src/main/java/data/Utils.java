@@ -134,21 +134,21 @@ public class Utils {
         // 一次性写出内容，使用默认样式，强制输出标题
         writer.write(rows, true);
 
-        Sheet sheet = writer.getSheet();
-        Font font = sheet.getWorkbook().createFont();
-        font.setFontName("宋体");
-        font.setFontHeight((short) 4);
-        font.setFontHeightInPoints((short) 4);
-        font.setItalic(true);
-        font.setStrikeout(true);
-        CellStyle style = sheet.getWorkbook().createCellStyle();
-        for (int i = 0; i < writer.getRowCount(); i++) {
-            style.setFont(font);
-            sheet.getRow(i).setRowStyle(style);
-        }
-        for (int i = 0; i < 32; i++) {
-            sheet.setColumnWidth(i, 1130);
-        }
+//        Sheet sheet = writer.getSheet();
+//        Font font = sheet.getWorkbook().createFont();
+//        font.setFontName("宋体");
+//        font.setFontHeight((short) 4);
+//        font.setFontHeightInPoints((short) 4);
+//        font.setItalic(true);
+//        font.setStrikeout(true);
+//        CellStyle style = sheet.getWorkbook().createCellStyle();
+//        for (int i = 0; i < writer.getRowCount(); i++) {
+//            style.setFont(font);
+//            sheet.getRow(i).setRowStyle(style);
+//        }
+//        for (int i = 0; i < 32; i++) {
+//            sheet.setColumnWidth(i, 1130);
+//        }
 
         // 关闭writer，释放内存
         writer.close();
@@ -504,6 +504,10 @@ public class Utils {
 
     //type 0异常1迟到2早退3缺勤
     public static void setListData(Data data, int room, int type) {
+        if (data.date.startsWith("20210208")) {
+            return;
+        }
+
         List<String> list = new ArrayList<>();
         list.add(room + "车间 ");
         list.add(data.name);
@@ -546,6 +550,7 @@ public class Utils {
         //打卡次数缺失
         if (list.size() == 1 || list.size() == 3 || list.size() == 5 || list.size() > 6) {
             setListData(data, room, 0);
+            data.error = 1;
             return;
         }
 
@@ -643,6 +648,7 @@ public class Utils {
                     }
 
                     DataBean dataBean = new DataBean(name, date, dd1, dd2, dd3, dd4, dd5, dd6, f1, f2, f3, Utils.ROOM);
+                    dataBean.error = data.error;
                     arrayDataBean.add(dataBean);
                 }
             }
@@ -658,6 +664,13 @@ public class Utils {
     private static void saveToExcel(Map<String, List<DataBean>> mapListDataBean, String fileName) {
         List<List<String>> rowsList = new ArrayList<>();
         List<List<String>> rowsList1 = new ArrayList<>();
+        List<String> lll0 = new ArrayList<>();
+        lll0.add("姓名");
+        lll0.add("天数");
+        lll0.add("加班时长");
+        lll0.add("加班天数");
+        lll0.add("总计");
+        rowsList1.add(lll0);
 
         List<String> dayList = Utils.getDaysOfMonth(Utils.YEAR_MONTH);
 
@@ -675,6 +688,7 @@ public class Utils {
             nameList.add("" + name);
             nameList.add("" + c + "d");
             nameList.add("" + Utils.getDecimals(n) + "h");
+            nameList.add("" + (c + Utils.getDecimals(n) / 8));
             rowsList.add(nameList);
 
             //汇总数据
@@ -682,8 +696,8 @@ public class Utils {
             lll.add(name);
             lll.add("" + c);
             lll.add("" + Utils.getDecimals(n));
-            lll.add("" + Utils.getDecimals(n)/8);
-            lll.add("" + (c+Utils.getDecimals(n)/8));
+            lll.add("" + Utils.getDecimals(n) / 8);
+            lll.add("" + (c + Utils.getDecimals(n) / 8));
             rowsList1.add(lll);
 
             //日期数据
@@ -704,6 +718,7 @@ public class Utils {
             List<String> timeListNm = new ArrayList<>();
             List<String> timeListC = new ArrayList<>();
             List<String> timeListN = new ArrayList<>();
+            List<String> timeListN1 = new ArrayList<>();
 
             for (int i = 0; i < dayList.size(); i++) {
                 String tt = dayList.get(i);
@@ -726,10 +741,11 @@ public class Utils {
                             timeListNm.add(dataBean.nm + "");
                             timeListC.add(dataBean.getDay() == 0 ? " " : dataBean.getDay() + "");
                             timeListN.add(dataBean.getTimes() == 0 ? " " : dataBean.getTimes() + "");
+                            timeListN1.add(dataBean.error == 1 ? "X" : "");
                         }
                     }
                 } else {
-                    timeList1.add(" ");
+                    timeList1.add("");
                     timeList2.add(" ");
                     timeList3.add(" ");
                     timeList4.add(" ");
@@ -740,6 +756,7 @@ public class Utils {
                     timeListNm.add(" ");
                     timeListC.add("");
                     timeListN.add("");
+                    timeListN1.add("");
                 }
             }
             rowsList.add(timeList1);
@@ -753,6 +770,7 @@ public class Utils {
             rowsList.add(timeListNm);
             rowsList.add(timeListC);
             rowsList.add(timeListN);
+            rowsList.add(timeListN1);
         }
 
         if (fileName == null || fileName.length() == 0) {
