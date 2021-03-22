@@ -718,7 +718,6 @@ public class Utils {
             List<String> timeListNm = new ArrayList<>();
             List<String> timeListC = new ArrayList<>();
             List<String> timeListN = new ArrayList<>();
-            List<String> timeListN1 = new ArrayList<>();
 
             for (int i = 0; i < dayList.size(); i++) {
                 String tt = dayList.get(i);
@@ -740,8 +739,8 @@ public class Utils {
                             timeListPm.add(dataBean.pm + "");
                             timeListNm.add(dataBean.nm + "");
                             timeListC.add(dataBean.getDay() == 0 ? " " : dataBean.getDay() + "");
-                            timeListN.add(dataBean.getTimes() == 0 ? " " : dataBean.getTimes() + "");
-                            timeListN1.add(dataBean.error == 1 ? "X" : "");
+                            String X =dataBean.error == 1 ? "X" : "";
+                            timeListN.add(dataBean.getTimes() == 0 ? " "+X : dataBean.getTimes() + ""+X);
                         }
                     }
                 } else {
@@ -756,7 +755,6 @@ public class Utils {
                     timeListNm.add(" ");
                     timeListC.add("");
                     timeListN.add("");
-                    timeListN1.add("");
                 }
             }
             rowsList.add(timeList1);
@@ -770,7 +768,6 @@ public class Utils {
             rowsList.add(timeListNm);
             rowsList.add(timeListC);
             rowsList.add(timeListN);
-            rowsList.add(timeListN1);
         }
 
         if (fileName == null || fileName.length() == 0) {

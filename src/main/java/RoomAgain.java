@@ -1,4 +1,3 @@
-import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.StrUtil;
 import data.Data;
 import data.Utils;
@@ -14,9 +13,9 @@ public class RoomAgain {
     public static void main(String[] args) throws Exception {
         Utils.clear();
         Utils.clearList();
+        Utils.ROOM = 2;
         Utils.YEAR_MONTH = "202102";
-        Utils.ROOM = 1;
-        Utils.FILE_NAME = "202102_1车间1.xlsx";
+        Utils.FILE_NAME = Utils.YEAR_MONTH + "_" + Utils.ROOM + "车间1.xlsx";
         List<Data> dataArrayList = new ArrayList<>();
         Workbook wbs = Utils.getWorkbook();
         Sheet childSheet = wbs.getSheetAt(0);
