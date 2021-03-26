@@ -17,6 +17,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+//处理人脸考勤机数据插入数据库
 public class Kq {
     public static void main(String[] args) throws Exception {
         InputStream in = new FileInputStream("F:\\WORK\\oa\\file\\Allevent.xlsx");
