@@ -10,6 +10,8 @@ public class DataBean {
     public String d4;
     public String d5;
     public String d6;
+    public String d7;
+    public String d8;
 
     public float am;
     public float pm;
@@ -32,7 +34,23 @@ public class DataBean {
         this.nm = nm;
         this.room = room;
     }
-
+    public DataBean(String name, String day, String d1, String d2, String d3, String d4, String d5, String d6, String d7, String d8,
+                    float am, float pm, float nm, int room) {
+        this.name = name;
+        this.day = day;
+        this.d1 = d1;
+        this.d2 = d2;
+        this.d3 = d3;
+        this.d4 = d4;
+        this.d5 = d5;
+        this.d6 = d6;
+        this.d7 = d7;
+        this.d8 = d8;
+        this.am = am;
+        this.pm = pm;
+        this.nm = nm;
+        this.room = room;
+    }
     @Override
     public String toString() {
         return "DataBean{" +
@@ -44,6 +62,8 @@ public class DataBean {
                 ", d4='" + d4 + '\'' +
                 ", d5='" + d5 + '\'' +
                 ", d6='" + d6 + '\'' +
+                ", d7='" + d7 + '\'' +
+                ", d8='" + d8 + '\'' +
                 ", am=" + am +
                 ", pm=" + pm +
                 ", nm=" + nm +
