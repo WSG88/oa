@@ -22,28 +22,22 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class RoomOne2 {
+public class RoomOne3 {
     static int DAY = 32;
     static String FILE_PATH = "F:\\WORK\\oa\\file\\";
-    static String YEAR_MONTH = "202103";
-    static int ROOM = 2;
+    static String YEAR_MONTH = "2021-03";
+    static int ROOM = 1;
     static int SIX = 6;
     static int SIX_T = 36;
     static String FIRST_TIME = "08:00";
     static String FIRST_TIME_PRE = "08:0" + SIX;
     static String QUE_QING = "--";
 
-    static List<String> arrayNamesList = new ArrayList<>();
-
-    public static Map<String, List<DateTimeBean>> groupList(List<DateTimeBean> dateTimeBeans) {
-        Map<String, List<DateTimeBean>> map = dateTimeBeans.stream().collect(Collectors.groupingBy(DateTimeBean::getName));
-        return map;
-    }
-
 
     public static void main(String[] args) throws Exception {
-
+        List<String> arrayNamesList = new ArrayList<>();
         List<DateTimeBean> listDateTimeBean = new ArrayList<>();
+
         List<File> files = FileUtil.loopFiles("F:\\WORK\\oa\\csv\\");
         for (File file : files) {
             String path = file.getAbsolutePath();
@@ -54,56 +48,47 @@ public class RoomOne2 {
                 listDateTimeBean.addAll(getTestBean4CSV(path));
             }
         }
+        Map<String, List<DateTimeBean>> mm = listDateTimeBean.stream().collect(Collectors.groupingBy(DateTimeBean::getName));
 
-        Map<String, List<DateTimeBean>> mm = groupList(listDateTimeBean);
-        System.out.println(mm);
-
-
-        clearList();
         if (ROOM == 1) {
             arrayNamesList = getNameList1();
         } else if (ROOM == 2) {
             arrayNamesList = getNameList2();
         }
-        List<Data> dataArrayList = new ArrayList<>();
-        Map<String, ArrayList<String>> map = new HashMap<>();
-        for (DateTimeBean dateTimeBean : listDateTimeBean) {
-            if (!arrayNamesList.contains(dateTimeBean.getName())) {
-                continue;
-            }
-            String key = dateTimeBean.getName() + "," + dateTimeBean.getDate().replace("-", "");
-            ArrayList<String> arrayList = map.get(key);
-            if (arrayList == null) {
-                arrayList = new ArrayList<>();
-                map.put(key, arrayList);
-            }
-            if (dateTimeBean.getTime() != null && dateTimeBean.getTime().trim().length() > 0) {
-                arrayList.add(dateTimeBean.getTime().trim());
-            }
-            map.put(key, arrayList);
-        }
 
-        arrayNamesList = arrayNamesList.stream().distinct().collect(Collectors.toList());
+        List<Data> dataArrayList = new ArrayList<>();
 
         for (String name : arrayNamesList) {
-
-//            if(!"徐锦军".equals(name)){
-//                continue;
-//            }
-
-            for (int i1 = 1; i1 < DAY; i1++) {
-                String date = YEAR_MONTH + String.format("%02d", i1);
-                String key = name + "," + date;
-                ArrayList<String> arrayList = map.get(key);
-
-                if (arrayList != null && !arrayList.isEmpty()) {
+            List<DateTimeBean> lists = mm.get(name);
+            if (lists == null) {
+                continue;
+            }
+            Map<String, List<DateTimeBean>> map = lists.stream().collect(Collectors.groupingBy(DateTimeBean::getDate));
+            Iterator iterator = map.keySet().iterator();
+            while (iterator.hasNext()) {
+                String date = (String) iterator.next();
+                if (!date.contains(YEAR_MONTH)) {
+                    continue;
+                }
+                List<DateTimeBean> list = map.get(date);
+                list.sort(new Comparator<DateTimeBean>() {
+                    @Override
+                    public int compare(DateTimeBean o1, DateTimeBean o2) {
+                        return o1.getTime().compareTo(o2.getTime());
+                    }
+                });
+                ArrayList<String> arrayList = new ArrayList<>();
+                for (DateTimeBean bean : list) {
+                    arrayList.add(bean.getTime());
+                }
+                if (!arrayList.isEmpty()) {
                     arrayList.sort(new Comparator<String>() {
                         @Override
                         public int compare(String o1, String o2) {
                             return o1.compareTo(o2);
                         }
                     });
-//                    System.out.println(arrayList);
+                    //System.out.println(arrayList);
                     //--------------------------------------------------
                     HashSet<String> hashSet = new HashSet<>();
                     String tmp = null;
@@ -113,10 +98,8 @@ public class RoomOne2 {
                             tmp = string;
                             hashSet.add(s);
                         } else {
-                            long ll = DateUtil.between(DateUtil.parse(tmp, "yyyyMMdd HH:mm"), DateUtil.parse(string, "yyyyMMdd HH:mm"), DateUnit.MINUTE);
-                            if (ll < 6) {
-//                                    System.out.println("时间差为" + ll + "分钟" + name + date + arrayList);
-                            } else {
+                            if (DateUtil.between(DateUtil.parse(tmp, "yyyy-MM-dd HH:mm"),
+                                    DateUtil.parse(string, "yyyy-MM-dd HH:mm"), DateUnit.MINUTE) > 6) {
                                 tmp = string;
                                 hashSet.add(s);
                             }
@@ -158,7 +141,7 @@ public class RoomOne2 {
                             arrayList.remove(arr1.get(0));
                         }
                     }
-//                    System.out.println(arrayList);
+//                    System.out.println(name + date + arrayList);
 
                     completeQueQing(arrayList);
                     dataArrayList.add(new Data(name, date, arrayList));
@@ -179,13 +162,13 @@ public class RoomOne2 {
     static List<String> getDaysOfMonth(String year) {
         List<String> list = new ArrayList<>();
         try {
-            Date date = new SimpleDateFormat("yyyyMM").parse(year);
+            Date date = new SimpleDateFormat("yyyy-MM").parse(year);
             Calendar calendar = Calendar.getInstance();
             calendar.setTime(date);
             int days = calendar.getActualMaximum(Calendar.DAY_OF_MONTH);
             for (int i = 1; i < days + 1; i++) {
                 String newString = String.format("%02d", i);
-                list.add(year + newString);
+                list.add(year + "-" + newString);
             }
         } catch (ParseException e) {
             e.printStackTrace();
@@ -208,8 +191,8 @@ public class RoomOne2 {
         if (d1.contains(QUE_QING) || d2.contains(QUE_QING)) {
             return 0F;
         }
-        long l1 = DateUtil.parse(d1, "yyyyMMddHH:mm").toCalendar().getTimeInMillis() / 1000;
-        long l2 = DateUtil.parse(d2, "yyyyMMddHH:mm").toCalendar().getTimeInMillis() / 1000;
+        long l1 = DateUtil.parse(d1, "yyyy-MM-ddHH:mm").toCalendar().getTimeInMillis() / 1000;
+        long l2 = DateUtil.parse(d2, "yyyy-MM-ddHH:mm").toCalendar().getTimeInMillis() / 1000;
         float f = (l2 - l1) / 3600F;
         return Float.parseFloat(new DecimalFormat(".00").format(f));
     }
@@ -501,8 +484,8 @@ public class RoomOne2 {
             return time1;
         }
         String dd = day + time1;
-        long l1 = DateUtil.parse(dd, "yyyyMMddHH:mm").toCalendar().getTimeInMillis();
-        long l2 = DateUtil.parse(day + FIRST_TIME_PRE, "yyyyMMddHH:mm").toCalendar().getTimeInMillis();
+        long l1 = DateUtil.parse(dd, "yyyy-MM-ddHH:mm").toCalendar().getTimeInMillis();
+        long l2 = DateUtil.parse(day + FIRST_TIME_PRE, "yyyy-MM-ddHH:mm").toCalendar().getTimeInMillis();
 
         if (l1 > l2) {
             return getCompleteTime(time1);
@@ -663,8 +646,8 @@ public class RoomOne2 {
         //上午迟到
         if (list.size() > 1) {
             String dd = data.date + list.get(0);
-            long l1 = DateUtil.parse(dd, "yyyyMMddHH:mm").toCalendar().getTimeInMillis();
-            long l2 = DateUtil.parse(data.date + "08:06", "yyyyMMddHH:mm").toCalendar().getTimeInMillis();
+            long l1 = DateUtil.parse(dd, "yyyy-MM-ddHH:mm").toCalendar().getTimeInMillis();
+            long l2 = DateUtil.parse(data.date + "08:06", "yyyy-MM-ddHH:mm").toCalendar().getTimeInMillis();
             if (l1 > l2) {
                 setListData(data, room, 1);
             }
@@ -782,7 +765,7 @@ public class RoomOne2 {
             //日期数据
             List<String> dayList1 = new ArrayList<>();
             for (String s : dayList) {
-                dayList1.add(s.replace(YEAR_MONTH, ""));
+                dayList1.add(s.substring(8, 10));
             }
             rowsList.add(dayList1);
 
