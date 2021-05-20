@@ -23,9 +23,8 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class RoomOne3 {
-    static int DAY = 32;
     static String FILE_PATH = "F:\\WORK\\oa\\file\\";
-    static String YEAR_MONTH = "2021-03";
+    static String YEAR_MONTH = "2021-05";
     static int ROOM = 1;
     static int SIX = 6;
     static int SIX_T = 36;
@@ -54,6 +53,8 @@ public class RoomOne3 {
             arrayNamesList = getNameList1();
         } else if (ROOM == 2) {
             arrayNamesList = getNameList2();
+        } else if (ROOM == 0) {
+            arrayNamesList = getNameList();
         }
 
         List<Data> dataArrayList = new ArrayList<>();
@@ -854,25 +855,37 @@ public class RoomOne3 {
         List<String> list = new ArrayList<>();
         list.addAll(Arrays.asList(("何巧珍\n" +
                 "徐慧林\n" +
+
+                "王振宇\n" +
+                "谭强\n" +
+                "徐柳根\n" +
+                "许凌玉\n" +
+                "蒋婵\n" +
+                "刘翔\n" +
+                "郑彦俊\n" +
+                "杨洁\n" +
+                "何晓晴\n" +
+
+                "李安琦\n" +
+                "陈妍\n" +
+                "危欢\n" +
+                "张集成\n" +
+                "刘良红\n" +
+
                 "张世玉\n" +
                 "臧世荣\n" +
                 "刘太华\n" +
                 "余东湖\n" +
                 "宋圣林\n" +
                 "夏宇恒\n" +
-                "许凌玉\n" +
                 "王之检\n" +
-                "谭强\n" +
                 "周谟林\n" +
                 "李星星\n" +
                 "周左文\n" +
                 "杜传国\n" +
                 "汪胜利\n" +
                 "苏俊潇\n" +
-                "徐柳根\n" +
                 "程后平\n" +
-                "刘翔\n" +
-                "郑彦俊\n" +
                 "危发强\n" +
                 "张康文\n" +
                 "程厚阳\n" +
@@ -881,115 +894,121 @@ public class RoomOne3 {
                 "虞涛\n" +
                 "张志成\n" +
                 "张志旗\n" +
-                "陈妍\n" +
                 "徐靖\n" +
                 "刘镇\n" +
                 "张学成\n" +
                 "方兴兴\n" +
-                "蒋婵\n" +
-                "李安琦\n" +
                 "魏广益\n" +
                 "张玉军\n" +
                 "周国桃\n" +
                 "朱相雨\n" +
                 "朱礼涛\n" +
                 "汪彬\n" +
-                "张集成\n" +
                 "方敏\n" +
-                "杨洁\n" +
-                "何晓晴\n").split("\n")));
+                "程建东\n").split("\n")));
         list.addAll(Arrays.asList(("刘三波\n" +
-                "冯金平\n" +
-                "王振宇\n").split("\n")));
+                "冯金平\n").split("\n")));
         return list;
     }
 
     public static List<String> getNameList2() {
         List<String> list = new ArrayList<>();
-        list.addAll(Arrays.asList(("陈秋生\n" +
+        list.addAll(Arrays.asList((
                 "吴兰\n" +
-                "胡镇红\n" +
-                "汪月霞\n" +
-                "徐锦军\n" +
-                "黄颖超\n" +
-                "张光华\n" +
-                "汪小英\n" +
-                "徐育林\n" +
-                "夏晓龙\n" +
-                "朱正飞\n" +
-                "李大江\n" +
-                "章水根\n" +
-                "田维仁\n" +
-                "方智鑫\n" +
-                "危欢\n" +
-                "程宇文\n" +
-                "石治福\n" +
-                "邹宇驰\n" +
-                "刘小龙\n" +
-                "何海贵\n" +
-                "万立妹\n" +
-                "万运来\n" +
-                "朱想梅\n" +
-                "江伟\n" +
-                "李红海\n" +
-                "葛银保\n" +
-                "张新丽\n" +
-                "丁国栋\n" +
-                "余雪云\n" +
-                "黄亦龙\n" +
-                "王章美\n" +
-                "江鹏\n" +
-                "陈亚军\n" +
-                "苏芳华\n" +
-                "沈长征\n" +
-                "侯木财\n" +
-                "王金宝\n" +
-                "苏珍生\n" +
-                "吴想凤\n" +
-                "罗飞\n" +
-                "张祖胜\n" +
-                "张欢\n" +
-                "饶国辉\n" +
-                "苏利民\n" +
-                "王国龙\n" +
-                "黄加粮\n" +
-                "周铭\n" +
-                "刘敏\n" +
-                "彭小英\n").split("\n")));
-        list.addAll(Arrays.asList(("冯明海\n" +
-                "程怡敏\n" +
-                "程征青\n" +
-                "詹冬养\n" +
-                "胡永星\n" +
-                "詹家景\n").split("\n")));
+                        "徐育林\n" +
+                        "王章美\n" +
+                        "张新丽\n" +
+
+                        "冯明海\n" +
+                        "徐锦军\n" +
+                        "饶国辉\n" +
+                        "沈长征\n" +
+
+                        "程怡敏\n" +
+                        "胡永星\n" +
+                        "葛银保\n" +
+                        "苏珍生\n" +
+                        "吴想凤\n" +
+                        "张祖胜\n" +
+                        "张光华\n" +
+                        "汪小英\n" +
+                        "黄加粮\n" +
+                        "陈秋生\n" +
+
+                        "詹冬养\n" +
+                        "胡镇红\n" +
+                        "石治福\n" +
+                        "夏晓龙\n" +
+                        "苏芳华\n" +
+                        "侯木财\n" +
+                        "万立妹\n" +
+                        "朱想梅\n" +
+                        "汪月霞\n" +
+                        "彭小英\n" +
+
+                        "詹家景\n" +
+                        "程征青\n" +
+                        "黄颖超\n" +
+                        "朱正飞\n" +
+                        "李大江\n" +
+                        "章水根\n" +
+                        "田维仁\n" +
+                        "方智鑫\n" +
+                        "程宇文\n" +
+                        "邹宇驰\n" +
+                        "刘小龙\n" +
+                        "何海贵\n" +
+                        "万运来\n" +
+                        "江伟\n" +
+                        "李红海\n" +
+                        "黄亦龙\n" +
+                        "江鹏\n" +
+                        "陈亚军\n" +
+                        "王金宝\n" +
+                        "张欢\n" +
+                        "罗飞\n" +
+                        "苏利民\n" +
+                        "王国龙\n" +
+                        "周铭\n" +
+                        "刘敏\n" +
+                        "李柳柳\n").split("\n")));
         return list;
     }
 
     public static List<String> getNameList() {
         List<String> list = new ArrayList<>();
 
-        list.addAll(Arrays.asList(("陈波\n" +
-                "金美兰\n" +
-                "陈伟\n" +
-                "何仁易\n" +
-                "方卫华\n" +
-                "陈卫平\n" +
-                "陈鹏\n" +
-                "何炳辉\n" +
-                "苏阳阳\n" +
+//        list.addAll(Arrays.asList(("陈波\n" +
+//                "金美兰\n" +
+//                "陈伟\n" +
+//                "何仁易\n" +
+//                "方卫华\n" +
+//                "陈卫平\n" +
+//                "陈鹏\n" +
+//                "何炳辉\n" +
+//                "苏阳阳\n" +
+//                "张光宗\n" +
+//                "张仁爱\n" +
+//                "徐琳\n" +
+//                "汪俊锋\n" +
+//                "陈鹏\n" +
+//                "王思刚\n" +
+//                "苏金丽\n" +
+//                "刘明巧\n" +
+//                "陈彬\n" +
+//                "樊玉明\n" +
+//                "陈恋\n" +
+//                "吴立平\n" +
+//                "毋保保\n").split("\n")));
+
+        list.addAll(Arrays.asList((
                 "张光宗\n" +
-                "张仁爱\n" +
-                "徐琳\n" +
-                "汪俊锋\n" +
-                "陈鹏\n" +
-                "王思刚\n" +
-                "苏金丽\n" +
-                "刘明巧\n" +
-                "陈彬\n" +
-                "樊玉明\n" +
-                "陈恋\n" +
-                "吴立平\n" +
-                "毋保保\n").split("\n")));
+                        "张仁爱\n" +
+                        "张金娥\n" +
+                        "徐琳\n" +
+                        "刘明巧\n" +
+                        "樊玉明\n" +
+                        "陈恋\n").split("\n")));
         return list;
     }
 
