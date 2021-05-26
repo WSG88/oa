@@ -905,7 +905,12 @@ public class RoomOne3 {
                 "朱礼涛\n" +
                 "汪彬\n" +
                 "方敏\n" +
-                "程建东\n").split("\n")));
+                "程建东\n"+
+                "郑凯琦\n"+
+                "周柯详\n"+
+                "周春\n"
+
+        ).split("\n")));
         list.addAll(Arrays.asList(("刘三波\n" +
                 "冯金平\n").split("\n")));
         return list;

@@ -23,11 +23,14 @@ public class TechnologyTemplateExtraction {
         PATH_NAME = "602指令\\";
         PATH_NAME = "安达维尔\\";
         PATH_NAME = "昌飞指令\\";
+        PATH_NAME = "常发指令\\";
+        PATH_NAME = "九江船舶\\";
+        PATH_NAME = "郑飞指令\\";
         PATH_NAME = "错误\\";
         PATH_NAME = "";
 
 //        File[] files = FileUtil.ls("D:\\ERP&MES\\天一指令\\" + PATH_NAME);
-        File[] files = FileUtil.ls("E:\\信息办\\123123\\" + PATH_NAME);
+        File[] files = FileUtil.ls("E:\\人力资源部\\00信息办\\天一指令\\" + PATH_NAME);
         for (int i = 0; i < files.length; i++) {
             File file = files[i];
             if (file.isDirectory()) {
@@ -52,7 +55,11 @@ public class TechnologyTemplateExtraction {
                 Utils.FILE_PATH = file.getParent() + "\\";
                 Utils.FILE_NAME = file.getName();
                 System.out.println(file.getAbsolutePath());
-                AAA();
+                try {
+                    AAA();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         }
         toSave();
@@ -70,8 +77,7 @@ public class TechnologyTemplateExtraction {
         stringArrayList.add("加工时间");
         stringArrayList.add("是否MES管控");
         SAVE_LIST.add(0, stringArrayList);
-        ExcelWriter writer = ExcelUtil.getWriter("C:\\Work\\oa\\file\\" + PATH_NAME +
-                "_工艺_" + System.currentTimeMillis() + ".xls");
+        ExcelWriter writer = ExcelUtil.getWriter("E:\\人力资源部\\00信息办\\天一指令\\" + "_工艺_" + System.currentTimeMillis() + ".xls");
         writer.write(SAVE_LIST, true);
         writer.close();
         System.out.println(NUMBER_LIST.size() + "_" + SAVE_LIST.size());

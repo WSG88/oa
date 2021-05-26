@@ -20,7 +20,7 @@ import java.util.Map;
 //处理人脸考勤机数据插入数据库
 public class Kq {
     public static void main(String[] args) throws Exception {
-        InputStream in = new FileInputStream("F:\\WORK\\oa\\file\\Allevent.xlsx");
+        InputStream in = new FileInputStream("Allevent.xlsx");
         Workbook wbs = WorkbookFactory.create(in);
         Sheet childSheet = wbs.getSheetAt(0);
         List<Entity> list = new ArrayList<>();
