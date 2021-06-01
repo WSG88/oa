@@ -6,34 +6,52 @@ import cn.hutool.core.text.csv.CsvReader;
 import cn.hutool.core.text.csv.CsvRow;
 import cn.hutool.core.text.csv.CsvUtil;
 import cn.hutool.core.util.CharsetUtil;
+import cn.hutool.crypto.SecureUtil;
+import cn.hutool.db.Db;
+import cn.hutool.db.Entity;
 import cn.hutool.poi.excel.ExcelUtil;
 import cn.hutool.poi.excel.ExcelWriter;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import data.Data;
 import data.DataBean;
 import data.DateTimeBean;
+import data.NameData;
 import org.apache.poi.ss.usermodel.*;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
+import java.sql.SQLException;
 import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static java.util.Comparator.comparing;
+import static java.util.stream.Collectors.collectingAndThen;
+import static java.util.stream.Collectors.toCollection;
+
 public class RoomOne3 {
     static String FILE_PATH = "F:\\WORK\\oa\\file\\";
-    static String YEAR_MONTH = "2021-05";
+    static String YEAR_MONTH = "2021-06";
     static int ROOM = 1;
     static int SIX = 6;
     static int SIX_T = 36;
     static String FIRST_TIME = "08:00";
     static String FIRST_TIME_PRE = "08:0" + SIX;
     static String QUE_QING = "--";
-
+    static List<NameData> userList;
 
     public static void main(String[] args) throws Exception {
+
+        userList = new Gson().fromJson(NameData.NAME, new TypeToken<ArrayList<NameData>>() {
+        }.getType());
+        userList = userList.stream().collect(collectingAndThen(toCollection(() ->
+                new TreeSet<NameData>(comparing(NameData::getEmployeeNo))), ArrayList::new));
+
+
         List<String> arrayNamesList = new ArrayList<>();
         List<DateTimeBean> listDateTimeBean = new ArrayList<>();
 
@@ -143,6 +161,29 @@ public class RoomOne3 {
                         }
                     }
 //                    System.out.println(name + date + arrayList);
+
+                    for (String s : arrayList) {
+                        for (NameData nameData : userList) {
+                            if (nameData.getEmployeeName().equals(name)) {
+                                String employeeNo = nameData.getEmployeeNo();
+                                String timeOrg = date + " " + s + ":00";
+                                try {
+                                    Db.use().insert(
+                                            Entity.create("employee_time")
+                                                    .set("employee", nameData.getEmployeeNo())
+                                                    .set("name", nameData.getEmployeeName())
+                                                    .set("time", timeOrg)
+                                                    .set("date_time", DateUtil.parseDateTime(timeOrg))
+                                                    .set("md_id", SecureUtil.md5(employeeNo + timeOrg))
+                                                    .set("time_org", timeOrg)
+                                    );
+                                } catch (SQLException e) {
+//                                    e.printStackTrace();
+                                }
+
+                            }
+                        }
+                    }
 
                     completeQueQing(arrayList);
                     dataArrayList.add(new Data(name, date, arrayList));
@@ -905,9 +946,9 @@ public class RoomOne3 {
                 "朱礼涛\n" +
                 "汪彬\n" +
                 "方敏\n" +
-                "程建东\n"+
-                "郑凯琦\n"+
-                "周柯详\n"+
+                "程建东\n" +
+                "郑凯琦\n" +
+                "周柯详\n" +
                 "周春\n"
 
         ).split("\n")));
