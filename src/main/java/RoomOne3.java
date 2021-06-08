@@ -35,8 +35,8 @@ import static java.util.stream.Collectors.toCollection;
 
 public class RoomOne3 {
     static String FILE_PATH = "F:\\WORK\\oa\\file\\";
-    static String YEAR_MONTH = "2021-06";
-    static int ROOM = 1;
+    static String YEAR_MONTH = "2021-05";
+    static int ROOM = 3;
     static int SIX = 6;
     static int SIX_T = 36;
     static String FIRST_TIME = "08:00";
@@ -71,6 +71,8 @@ public class RoomOne3 {
             arrayNamesList = getNameList1();
         } else if (ROOM == 2) {
             arrayNamesList = getNameList2();
+        } else if (ROOM == 3) {
+            arrayNamesList = getNameList3();
         } else if (ROOM == 0) {
             arrayNamesList = getNameList();
         }
@@ -748,6 +750,9 @@ public class RoomOne3 {
                     if (f1 > 0 && f2 > 5.5 && (Double.parseDouble(d4.substring(0, 2)) > 17)) {//晚上加班不打卡扣0.5
                         f2 = f2 - 0.5f;
                     }
+                    f1=0;
+                    f2=0;
+                    f3=0;
 
                     DataBean dataBean = new DataBean(name, date, dd1, dd2, dd3, dd4, dd5, dd6, dd7, dd8, f1, f2, f3, ROOM);
                     dataBean.error = data.error;
@@ -1021,33 +1026,11 @@ public class RoomOne3 {
         return list;
     }
 
-    public static List<String> getNameList() {
+    public static List<String> getNameList3() {
         List<String> list = new ArrayList<>();
-
-//        list.addAll(Arrays.asList(("陈波\n" +
-//                "金美兰\n" +
-//                "陈伟\n" +
-//                "何仁易\n" +
-//                "方卫华\n" +
-//                "陈卫平\n" +
-//                "陈鹏\n" +
-//                "何炳辉\n" +
-//                "苏阳阳\n" +
-//                "张光宗\n" +
-//                "张仁爱\n" +
-//                "徐琳\n" +
-//                "汪俊锋\n" +
-//                "陈鹏\n" +
-//                "王思刚\n" +
-//                "苏金丽\n" +
-//                "刘明巧\n" +
-//                "陈彬\n" +
-//                "樊玉明\n" +
-//                "陈恋\n" +
-//                "吴立平\n" +
-//                "毋保保\n").split("\n")));
-
         list.addAll(Arrays.asList((
+                "方卫华\n" +
+                        "陈鹏\n" +
                 "张光宗\n" +
                         "张仁爱\n" +
                         "张金娥\n" +
@@ -1055,6 +1038,24 @@ public class RoomOne3 {
                         "刘明巧\n" +
                         "樊玉明\n" +
                         "陈恋\n").split("\n")));
+        return list;
+    }
+
+    public static List<String> getNameList() {
+        List<String> list = new ArrayList<>();
+        list.addAll(Arrays.asList((
+                "陈伟\n" +
+                        "何仁易\n" +
+                        "糜火锋\n" +
+                        "王扬威\n" +
+                        "陈卫平\n" +
+                        "何炳辉\n" +
+                        "苏阳阳\n" +
+                        "汪俊锋\n" +
+                        "陈鹏\n" +
+                        "王思刚\n" +
+                        "苏金丽\n" +
+                        "陈彬\n").split("\n")));
         return list;
     }
 
