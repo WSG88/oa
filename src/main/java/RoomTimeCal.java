@@ -66,7 +66,7 @@ public class RoomTimeCal {
     static String QUE_QING = "--";
 
     public static void cal(List<DateTimeBean> listDateTimeBean) {
-        Map<String, List<DateTimeBean>> mm = listDateTimeBean.stream().collect(Collectors.groupingBy(DateTimeBean::getName));
+        Map<String, List<DateTimeBean>> mm = listDateTimeBean.stream().collect(Collectors.groupingBy(RoomTimeCal.DateTimeBean::getName));
         List<Data> dataArrayList = new ArrayList<>();
         List<String> arrayNamesList = getNameList2();
         for (String name : arrayNamesList) {
@@ -106,6 +106,12 @@ public class RoomTimeCal {
                     arrayList.clear();
                     arrayList.addAll(result);
 
+                    //处理早上多打卡问题
+                    if (arrayList.size() > 3) {
+                        if (arrayList.get(0).startsWith("07:") && arrayList.get(1).startsWith("07:")) {
+                            arrayList.remove(1);
+                        }
+                    }
                     //处理夏季中午多打卡问题
                     if (arrayList.size() > 4) {
                         if (arrayList.get(1).startsWith("12:")
@@ -141,7 +147,9 @@ public class RoomTimeCal {
                             arrayList.remove(arr1.get(0));
                         }
                     }
-
+                    if (arrayList.size() == 5) {
+                        System.out.println(name + " " + date + " " + arrayList);
+                    }
                     completeQueQing(arrayList);
                     dataArrayList.add(new Data(name, date, arrayList));
                 }
