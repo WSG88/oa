@@ -20,12 +20,16 @@ public class Money {
     public static void main(String[] args) throws Exception {
         String path1 = "E:\\人力资源部\\资料\\工资\\2021工资\\202105\\202105工资表(1).xlsx";
         List<MoneyData> dataArrayList1 = cal(path1);
-        String path2 = "E:\\人力资源部\\资料\\工资\\2021工资\\202106\\202106工资表.xlsx";
+        String path2 = "E:\\人力资源部\\资料\\工资\\2021工资\\202106\\202106工资表计算.xlsx";
         List<MoneyData> dataArrayList2 = cal(path2);
+//        for (MoneyData moneyData : dataArrayList2) {
+//            System.out.println(moneyData.姓名+"----------------------------------------------------------------------");
+//        }
 
         for (int i = 0; i < dataArrayList1.size(); i++) {
             MoneyData moneyData1 = dataArrayList1.get(i);
             String name1 = moneyData1.姓名;
+//            System.out.println(name1+"----------------------------------------------------------------------");
             String dept1 = moneyData1.部门;
             for (MoneyData moneyData2 : dataArrayList2) {
                 if (moneyData2.姓名.equals(name1) && moneyData2.部门.equals(dept1)) {
@@ -44,10 +48,19 @@ public class Money {
                     dd4 = sub(moneyData2.夜班补贴, moneyData1.夜班补贴);
                     dd1 = sub(moneyData2.实出勤天数, moneyData1.实出勤天数);
                     dd2 = sub(moneyData2.实付工资, add(moneyData1.实付工资, dddd));
-                    if (dd != 0) {
-                        System.out.println(name1 + " 工资差 " + dd5 + " 上班费差 " + dd + " 上班时间差 " + dd1 + " 操机补贴差 " + dd3 + " 夜班补贴差 " + dd4 + " 实付工资差 " + dd2);
+                    if (dd2 != 0) {
+                        System.out.println(
+                                getStringLen(name1) +
+                                        getStringLen(" 工资差 " + dd5) +
+                                        getStringLen(" 实付差 " + dd2) +
+                                        getStringLen(" 操机差 " + dd3) +
+                                        getStringLen(" 夜班差 " + dd4) +
+                                        getStringLen(" 上班费差 " + dd) +
+                                        getStringLen(" 上班时差 " + dd1)
+                        );
                         System.out.println("------------------");
                     }
+
                 }
             }
         }
@@ -63,6 +76,18 @@ public class Money {
         List<String> reduce2 = list2.stream().filter(item -> !list1.contains(item)).collect(toList());
         System.out.println("---入职人员---");
         reduce2.parallelStream().forEach(System.out::println);
+    }
+
+    private static String getStringLen(Object str) {
+        StringBuilder ss = new StringBuilder(str.toString());
+        if (ss.length() < 20) {
+            for (int i = 0; i < 20 - ss.length(); i++) {
+                ss.append(" ");
+            }
+            return ss.toString();
+        } else {
+            return ss.toString();
+        }
     }
 
     private static List<String> getList(List<MoneyData> dataArrayList1) {
